@@ -1,1000 +1,2876 @@
 <!DOCTYPE html>
-<html lang=\"id\">
+<html lang="id">
 <head>
-    <meta charset=\"UTF-8\">
-    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
-    <title>BossX Mining Engine - Masternode Edition</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BossX - Crypto Exchange Platform | Validator Masternode System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- React Dependencies for Chat Room -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
-        /* Basic Reset - GitHub Pages Compatible */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
         }
-        
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            color: white;
-            min-height: 100vh;
-            line-height: 1.6;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
         }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+        .gradient-bg {
+            background: linear-gradient(to bottom, #1a1a1a, #000000);
         }
-        
-        /* Simple Cards */
-        .card {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease;
+        .gradient-border {
+            border: 1px solid rgba(245, 158, 11, 0.2);
         }
-        
-        .card:hover {
-            transform: translateY(-5px);
+        .gradient-card {
+            background: linear-gradient(to right, rgba(245, 158, 11, 0.1), rgba(234, 179, 8, 0.1));
         }
-        
-        /* Header */
-        .header {
+        .hover-scale {
+            transition: transform 0.2s ease-in-out;
+        }
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: .5;
+            }
+        }
+        .sidebar {
+            transition: width 0.3s ease-in-out;
+            width: 14rem;
+            min-width: 14rem;
+        }
+        .sidebar.collapsed {
+            width: 4rem;
+            min-width: 4rem;
+        }
+        .menu-item {
+            transition: all 0.2s ease-in-out;
+        }
+        .menu-item:hover {
+            background-color: rgba(31, 41, 55, 0.5);
+            transform: translateX(4px);
+        }
+        .menu-item.active {
+            background: linear-gradient(to right, rgba(245, 158, 11, 0.2), rgba(234, 179, 8, 0.2));
+            color: #f59e0b;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .crypto-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.75rem;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        
-        .header h1 {
-            font-size: 2.5rem;
-            color: #00d4ff;
-            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
-        }
-        
-        .badge {
-            background: linear-gradient(45deg, #ff6b35, #f7931e);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-        
-        /* Grid Layout - Simple Flexbox */
-        .grid-3 {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .grid-3 > div {
-            flex: 1;
-            min-width: 300px;
-        }
-        
-        .grid-5 {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .grid-5 > div {
-            flex: 1;
-            min-width: 200px;
-            text-align: center;
-        }
-        
-        /* Buttons */
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            font-size: 14px;
-            display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            font-weight: bold;
+            font-size: 0.75rem;
+            color: #000;
+            overflow: hidden;
         }
-        
-        .btn-primary {
-            background: linear-gradient(45deg, #007bff, #0056b3);
-            color: white;
+        .crypto-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 0.75rem;
         }
-        
-        .btn-primary:hover {
-            background: linear-gradient(45deg, #0056b3, #004085);
+        .crypto-icon-large {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, rgba(245, 158, 11, 0.1), rgba(234, 179, 8, 0.1));
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        .profile-picture {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .stat-card {
+            background: #1a1a1a;
+            border: 1px solid #374151;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            transition: border-color 0.2s ease-in-out;
+            position: relative;
+            overflow: hidden;
+            min-height: 200px;
+        }
+        .stat-card:hover {
+            border-color: rgba(245, 158, 11, 0.5);
+        }
+        /* Corner Dots */
+        .corner-dot {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: radial-gradient(circle, #22c55e, #10b981);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            box-shadow: 0 0 6px #10b981;
+            pointer-events: none;
+        }
+        .stat-card:hover .corner-dot {
+            opacity: 1;
+            animation: dotPulse 2s ease-in-out infinite;
+        }
+        .corner-dot.top-left {
+            top: -3px;
+            left: -3px;
+        }
+        .corner-dot.top-right {
+            top: -3px;
+            right: -3px;
+        }
+        .corner-dot.bottom-right {
+            bottom: -3px;
+            right: -3px;
+        }
+        .corner-dot.bottom-left {
+            bottom: -3px;
+            left: -3px;
+        }
+        @keyframes dotPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 6px #10b981;
+            }
+            50% {
+                transform: scale(1.2);
+                box-shadow: 0 0 12px #22c55e;
+            }
+        }
+        /* Border Lines */
+        .border-line {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, #10b981, #22c55e, #10b981, transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .stat-card:hover .border-line {
+            opacity: 1;
+        }
+        .border-top {
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #10b981, #22c55e, #10b981, transparent);
+            animation: borderTop 3s linear infinite;
+            transform-origin: left;
+        }
+        .border-right {
+            top: 0;
+            right: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(180deg, transparent, #10b981, #22c55e, #10b981, transparent);
+            animation: borderRight 3s linear infinite 0.7s;
+            transform-origin: top;
+        }
+        .border-bottom {
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(270deg, transparent, #10b981, #22c55e, #10b981, transparent);
+            animation: borderBottom 3s linear infinite 1.4s;
+            transform-origin: right;
+        }
+        .border-left {
+            bottom: 0;
+            left: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(0deg, transparent, #10b981, #22c55e, #10b981, transparent);
+            animation: borderLeft 3s linear infinite 2.1s;
+            transform-origin: bottom;
+        }
+        @keyframes borderTop {
+            0% {
+                transform: scaleX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            25% {
+                transform: scaleX(1);
+                opacity: 1;
+            }
+            30% {
+                opacity: 0;
+            }
+            100% {
+                transform: scaleX(1);
+                opacity: 0;
+            }
+        }
+        @keyframes borderRight {
+            0% {
+                transform: scaleY(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            25% {
+                transform: scaleY(1);
+                opacity: 1;
+            }
+            30% {
+                opacity: 0;
+            }
+            100% {
+                transform: scaleY(1);
+                opacity: 0;
+            }
+        }
+        @keyframes borderBottom {
+            0% {
+                transform: scaleX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            25% {
+                transform: scaleX(1);
+                opacity: 1;
+            }
+            30% {
+                opacity: 0;
+            }
+            100% {
+                transform: scaleX(1);
+                opacity: 0;
+            }
+        }
+        @keyframes borderLeft {
+            0% {
+                transform: scaleY(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            25% {
+                transform: scaleY(1);
+                opacity: 1;
+            }
+            30% {
+                opacity: 0;
+            }
+            100% {
+                transform: scaleY(1);
+                opacity: 0;
+            }
+        }
+        /* Running Text Animation */
+        #running-text {
+            animation: scroll-left 60s linear infinite;
+        }
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+        #running-text:hover {
+            animation-play-state: paused;
+        }
+        /* Power Button Styles */
+        .power-button {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid #374151;
+            background: linear-gradient(145deg, #1f2937, #111827);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 8px 15px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        .power-button:hover {
             transform: translateY(-2px);
+            box-shadow: 
+                0 12px 25px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
-        
-        .btn-success {
-            background: linear-gradient(45deg, #28a745, #1e7e34);
-            color: white;
-        }
-        
-        .btn-success:hover {
-            background: linear-gradient(45deg, #1e7e34, #155724);
-            transform: translateY(-2px);
-        }
-        
-        .btn-disabled {
-            background: #6c757d;
-            color: #adb5bd;
+        .power-button.on {
+            border-color: #10b981;
+            background: linear-gradient(145deg, #059669, #047857);
+            box-shadow: 
+                0 8px 15px rgba(16, 185, 129, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                0 0 20px rgba(16, 185, 129, 0.5);
             cursor: not-allowed;
         }
-        
-        .btn-outline {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+        .power-button.on:hover {
+            transform: none;
+            box-shadow: 
+                0 8px 15px rgba(16, 185, 129, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                0 0 20px rgba(16, 185, 129, 0.5);
         }
-        
-        .btn-outline:hover {
-            background: rgba(255, 255, 255, 0.2);
+        .power-button.off {
+            border-color: #dc2626;
+            background: linear-gradient(145deg, #b91c1c, #991b1b);
+            box-shadow: 
+                0 8px 15px rgba(220, 38, 38, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 0 20px rgba(220, 38, 38, 0.5);
         }
-        
-        /* Input */
-        .input {
+        .power-button.off:hover {
+            box-shadow: 
+                0 12px 25px rgba(220, 38, 38, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 0 25px rgba(220, 38, 38, 0.6);
+        }
+        .power-icon {
+            font-size: 24px;
+            color: #ffffff;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+        /* Copy Button Animation */
+        .copy-button {
+            position: relative;
+            overflow: hidden;
+        }
+        .copy-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
             width: 100%;
-            padding: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 6px;
-            background: rgba(0, 0, 0, 0.3);
-            color: white;
-            font-size: 14px;
-            margin-bottom: 15px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
         }
-        
-        .input:focus {
-            outline: none;
-            border-color: #007bff;
-            box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+        .copy-button:hover::before {
+            left: 100%;
         }
-        
-        .input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
+        /* Tab Animation */
+        .tab-button {
+            position: relative;
+            transition: all 0.3s ease;
         }
-        
-        /* Select */
-        .select {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 6px;
-            background: rgba(0, 0, 0, 0.3);
-            color: white;
-            font-size: 14px;
-        }
-        
-        .select:focus {
-            outline: none;
-            border-color: #007bff;
-        }
-        
-        /* Status Indicator */
-        .status-dot {
-            width: 10px;
-            height: 10px;
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background: #f59e0b;
             border-radius: 50%;
-            display: inline-block;
-            margin-right: 8px;
-        }
-        
-        .status-active {
-            background: #28a745;
             animation: pulse 2s infinite;
         }
-        
-        .status-inactive {
-            background: #6c757d;
+        /* Input field styles */
+        .node-input {
+            width: 100%;
+            padding: 0.5rem;
+            background: rgba(31, 41, 55, 0.8);
+            border: 1px solid #374151;
+            border-radius: 0.5rem;
+            color: #ffffff;
+            font-size: 0.875rem;
+            transition: border-color 0.2s ease;
+            position: relative;
+            z-index: 10;
         }
-        
-        .status-warning {
-            background: #ffc107;
-            animation: pulse 2s infinite;
+        .node-input:focus {
+            outline: none;
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+            background: rgba(31, 41, 55, 0.9);
         }
-        
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+        .node-input::placeholder {
+            color: #9ca3af;
         }
-        
-        /* Stats Cards */
-        .stat-card {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            transition: transform 0.3s ease;
+        .node-input:disabled {
+            background: rgba(31, 41, 55, 0.3);
+            border-color: #4b5563;
+            color: #6b7280;
+            cursor: not-allowed;
         }
-        
-        .stat-card:hover {
-            transform: scale(1.05);
+        /* Button styles */
+        .node-button {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(145deg, #f59e0b, #d97706);
+            border: none;
+            border-radius: 0.5rem;
+            color: #ffffff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+            position: relative;
+            z-index: 10;
         }
-        
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 5px;
-            font-family: 'Courier New', monospace;
+        .node-button:hover:not(:disabled) {
+            background: linear-gradient(145deg, #d97706, #b45309);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(245, 158, 11, 0.4);
         }
-        
-        .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.8;
+        .node-button:active {
+            transform: translateY(0);
         }
-        
-        /* Log Container */
-        .log-container {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            padding: 20px;
+        .node-button:disabled {
+            background: linear-gradient(145deg, #6b7280, #4b5563);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        
-        .log-display {
-            height: 500px;
-            overflow-y: auto;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 6px;
+        /* Convert button specific styles */
+        .convert-button {
+            background: linear-gradient(145deg, #3b82f6, #2563eb) !important;
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3) !important;
         }
-        
-        .log-entry {
-            padding: 10px;
-            margin-bottom: 8px;
-            border-radius: 6px;
-            border-left: 4px solid;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            line-height: 1.4;
-            transition: transform 0.2s ease;
+        .convert-button:hover:not(:disabled) {
+            background: linear-gradient(145deg, #2563eb, #1d4ed8) !important;
+            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4) !important;
+            transform: translateY(-2px);
         }
-        
-        .log-entry:hover {
-            transform: translateX(5px);
+        /* Withdrawal button specific styles */
+        .withdrawal-button {
+            background: linear-gradient(145deg, #dc2626, #b91c1c) !important;
+            box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3) !important;
         }
-        
-        .log-info {
-            background: rgba(0, 123, 255, 0.2);
-            border-left-color: #007bff;
+        .withdrawal-button:hover:not(:disabled) {
+            background: linear-gradient(145deg, #b91c1c, #991b1b) !important;
+            box-shadow: 0 6px 12px rgba(220, 38, 38, 0.4) !important;
+            transform: translateY(-2px);
         }
-        
-        .log-status {
-            background: rgba(138, 43, 226, 0.2);
-            border-left-color: #8a2be2;
-        }
-        
-        .log-success {
-            background: rgba(40, 167, 69, 0.2);
-            border-left-color: #28a745;
-        }
-        
-        .log-error {
-            background: rgba(220, 53, 69, 0.2);
-            border-left-color: #dc3545;
-        }
-        
-        .log-timestamp {
-            color: rgba(255, 255, 255, 0.6);
-            margin-right: 10px;
-        }
-        
-        .log-level {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 10px;
-            margin-right: 10px;
-        }
-        
-        /* Controls */
-        .controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .filter-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        /* Countdown Timer */
-        .countdown {
-            font-family: 'Courier New', monospace;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #28a745;
-            text-align: center;
-        }
-        
-        /* Toast */
-        .toast {
+        /* Success/Error message */
+        .success-message {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: rgba(0, 0, 0, 0.9);
+            background: linear-gradient(145deg, #10b981, #059669);
             color: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            border-left: 4px solid #007bff;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
             z-index: 1000;
-            transform: translateX(400px);
-            transition: transform 0.3s ease;
-            max-width: 300px;
+            animation: slideIn 0.3s ease-out;
         }
-        
-        .toast.show {
-            transform: translateX(0);
+        .error-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(145deg, #dc2626, #b91c1c);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
         }
-        
-        .toast-title {
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        /* Network selection styles */
+        .network-option {
+            padding: 0.75rem;
+            border: 1px solid #374151;
+            border-radius: 0.5rem;
+            background: rgba(31, 41, 55, 0.5);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .network-option:hover {
+            border-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+        }
+        .network-option.selected {
+            border-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.2);
+        }
+        .network-option input[type="radio"] {
+            display: none;
+        }
+        /* Page transitions */
+        .page-content {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            display: none;
+        }
+        .page-content.active {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
+        }
+        /* Responsive Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            width: 100%;
+        }
+        @media (min-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        @media (max-width: 1023px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 640px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        /* Responsive sidebar */
+        @media (max-width: 1440px) {
+            .sidebar {
+                width: 12rem;
+                min-width: 12rem;
+            }
+            .stat-card {
+                padding: 1rem;
+            }
+        }
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 10rem;
+                min-width: 10rem;
+            }
+            .profile-picture {
+                width: 1.5rem;
+                height: 1.5rem;
+            }
+        }
+        .main-container {
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
+        .content-container {
+            max-width: 100%;
+            padding: 1rem;
+        }
+        /* Countdown timer */
+        .countdown-timer {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
             font-weight: bold;
-            margin-bottom: 5px;
+            color: #10b981;
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
         }
-        
-        .toast-message {
-            font-size: 0.9rem;
-            opacity: 0.9;
+        .auto-claim-timer {
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #3b82f6;
+            text-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
         }
-        
-        /* Utility Classes */
-        .text-center { text-align: center; }
-        .text-sm { font-size: 0.875rem; }
-        .text-xs { font-size: 0.75rem; }
-        .mb-10 { margin-bottom: 10px; }
-        .mb-15 { margin-bottom: 15px; }
-        .mb-20 { margin-bottom: 20px; }
-        .mt-10 { margin-top: 10px; }
-        .p-15 { padding: 15px; }
-        
-        /* Colors */
-        .text-blue { color: #007bff; }
-        .text-green { color: #28a745; }
-        .text-yellow { color: #ffc107; }
-        .text-red { color: #dc3545; }
-        .text-purple { color: #8a2be2; }
-        .text-white { color: white; }
-        .text-gray { color: rgba(255, 255, 255, 0.7); }
-        
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
+
+        /* ============ CHAT ROOM STYLES ============ */
+        /* Glowing Border Animation */
+        @keyframes glowingBorder {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+
+        .glowing-border::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #f59e0b, #3b82f6, #f59e0b);
+            background-size: 300% 300%;
+            z-index: -1;
+            border-radius: 26px;
+            opacity: 0.6;
+            filter: blur(1px);
+            animation: glowingBorder 8s linear infinite;
+            pointer-events: none;
+        }
+
+        /* Message Animation */
+        @keyframes messageIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
             }
-            
-            .header h1 {
-                font-size: 1.8rem;
+            to {
+                opacity: 1;
+                transform: translateX(0);
             }
-            
-            .grid-3 > div,
-            .grid-5 > div {
-                min-width: 100%;
-            }
-            
-            .controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .button-group {
-                justify-content: center;
-            }
-            
-            .log-display {
-                height: 400px;
-            }
-            
-            .stat-number {
-                font-size: 1.5rem;
-            }
+        }
+
+        .message-animate {
+            animation: messageIn 0.4s ease-out forwards;
+        }
+
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background-color: rgba(156, 163, 175, 0.5);
+            border-radius: 3px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(156, 163, 175, 0.7);
+        }
+
+        /* Hover animations */
+        .card-hover:hover {
+            transform: scale(1.05);
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover {
+            background: rgba(245, 158, 11, 0.05) !important;
+            border-color: rgba(245, 158, 11, 0.5) !important;
+        }
+
+        .menu-item.active {
+            background: rgba(245, 158, 11, 0.1) !important;
+            border-color: #f59e0b !important;
+            color: #f59e0b;
+        }
+
+        /* Live indicator */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .live-indicator {
+            animation: blink 1.5s infinite;
+        }
+
+        .hover-glow:hover::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #f59e0b, #3b82f6, #f59e0b);
+            z-index: -1;
+            border-radius: 12px;
+            opacity: 0.6;
+            filter: blur(2px);
+            animation: glowingBorder 8s linear infinite;
         }
     </style>
 </head>
 <body>
-    <div class=\"container\">
-        <!-- Header -->
-        <div class=\"card header\">
-            <div style=\"display: flex; align-items: center; gap: 15px;\">
-                <svg width=\"40\" height=\"40\" fill=\"none\" stroke=\"#ffc107\" viewBox=\"0 0 24 24\">
-                    <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M13 10V3L4 14h7v7l9-11h-7z\"></path>
-                </svg>
-                <h1>BossX Mining Engine</h1>
-                <span class=\"badge\">MASTERNODE</span>
-            </div>
-            <div>
-                <span id=\"systemStatus\" style=\"background: rgba(108, 117, 125, 0.8); padding: 5px 15px; border-radius: 20px; font-size: 0.8rem;\">
-                    <span id=\"headerDot\" class=\"status-dot status-inactive\"></span>
-                    System Ready
-                </span>
-            </div>
-        </div>
-
-        <!-- Controls Section -->
-        <div class=\"grid-3\">
-            <!-- Node Configuration -->
-            <div class=\"card\">
-                <h3 style=\"margin-bottom: 15px; color: #00d4ff;\">
-                    <svg width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\" style=\"margin-right: 8px;\">
-                        <circle cx=\"12\" cy=\"12\" r=\"3\"></circle>
-                        <path d=\"M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z\"></path>
-                    </svg>
-                    Node Configuration
-                </h3>
-                <input id=\"nodeInput\" type=\"text\" placeholder=\"contoh: 100 BossX\" class=\"input\">
-                <button id=\"activateButton\" class=\"btn btn-primary\">
-                    <svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
-                        <circle cx=\"12\" cy=\"12\" r=\"10\"></circle>
-                        <path d=\"M8 12l2 2 4-4\"></path>
-                    </svg>
-                    Aktivasi Masternode
-                </button>
-            </div>
-
-            <!-- Power Control -->
-            <div class=\"card\">
-                <h3 style=\"margin-bottom: 15px; color: #00d4ff;\">
-                    <svg width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\" style=\"margin-right: 8px;\">
-                        <circle cx=\"12\" cy=\"12\" r=\"10\"></circle>
-                        <path d=\"M8 12l2 2 4-4\"></path>
-                    </svg>
-                    Power Control
-                </h3>
-                <button id=\"powerButton\" class=\"btn btn-disabled\" disabled>
-                    <svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
-                        <circle cx=\"12\" cy=\"12\" r=\"10\"></circle>
-                        <path d=\"M12 6v6l4 2\"></path>
-                    </svg>
-                    Power On
-                </button>
-                <div id=\"powerStatus\" class=\"text-center text-sm text-gray mt-10\">
-                    Waiting for activation...
+    <div class="min-h-screen bg-black text-white flex main-container">
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar h-screen gradient-bg gradient-border">
+            <!-- Header with Logo -->
+            <div class="p-3 border-b border-amber-500/20">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <div class="crypto-icon">
+                            <img src="https://i.ibb.co/qYBkPDH3/Picsart-25-04-01-16-25-47-054.png" alt="BossX Logo" onerror="this.style.display='none'; this.parentNode.innerHTML='<div style=\\'background: linear-gradient(145deg, #f59e0b, #d97706); color: white; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.75rem;\\'>BX</div>'" />
+                        </div>
+                        <div id="logo-text">
+                            <h1 class="text-lg font-bold text-amber-400">BossX</h1>
+                            <p class="text-xs text-gray-400">Crypto Exchange</p>
+                        </div>
+                    </div>
+                    <button id="toggle-sidebar" class="text-gray-400 hover:text-amber-400 hover:bg-amber-500/10 p-1 rounded">
+                        <i data-lucide="chevron-left"></i>
+                    </button>
                 </div>
             </div>
-
-            <!-- Auto Claim Timer -->
-            <div class=\"card\">
-                <h3 style=\"margin-bottom: 15px; color: #00d4ff;\">
-                    <svg width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\" style=\"margin-right: 8px;\">
-                        <circle cx=\"12\" cy=\"12\" r=\"10\"></circle>
-                        <polyline points=\"12,6 12,12 16,14\"></polyline>
-                    </svg>
-                    Auto Claim Timer
-                </h3>
-                <div class=\"text-center\">
-                    <div id=\"claimCountdown\" class=\"countdown\">--</div>
-                    <div id=\"claimStatus\" class=\"text-sm text-gray\">Inactive</div>
-                    <div id=\"shareCounter\" class=\"text-xs text-purple mt-10\">Share #0</div>
+            <!-- Navigation Menu -->
+            <nav class="mt-4 px-2">
+                <a href="#" class="menu-item active flex items-center px-2 py-2 mb-2 rounded-xl" data-page="dashboard">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                    <span class="ml-2 font-medium menu-text text-sm">Dashboard</span>
+                </a>
+                <a href="#" class="menu-item flex items-center px-2 py-2 mb-2 rounded-xl text-gray-400" data-page="deposit">
+                    <i data-lucide="arrow-down-circle" class="w-4 h-4"></i>
+                    <span class="ml-2 font-medium menu-text text-sm">Deposit</span>
+                </a>
+                <a href="#" class="menu-item flex items-center px-2 py-2 mb-2 rounded-xl text-gray-400" data-page="withdrawal">
+                    <i data-lucide="arrow-up-circle" class="w-4 h-4"></i>
+                    <span class="ml-2 font-medium menu-text text-sm">Withdrawal</span>
+                </a>
+                <a href="#" class="menu-item flex items-center px-2 py-2 mb-2 rounded-xl text-gray-400" data-page="p2p">
+                    <i data-lucide="users" class="w-4 h-4"></i>
+                    <span class="ml-2 font-medium menu-text text-sm">Peer to Peer</span>
+                </a>
+                <!-- ✅ MENU CHAT ROOM SUDAH DITAMBAHKAN KEMBALI -->
+                <a href="#" class="menu-item flex items-center px-2 py-2 mb-2 rounded-xl text-gray-400" data-page="chat-room">
+                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                    <span class="ml-2 font-medium menu-text text-sm">Chat Room</span>
+                </a>
+                <!-- END MENU BARU -->
+                <a href="#" class="menu-item flex items-center px-2 py-2 mb-2 rounded-xl text-gray-400" data-page="faq">
+                    <i data-lucide="help-circle" class="w-4 h-4"></i>
+                    <span class="ml-2 font-medium menu-text text-sm">FAQ</span>
+                </a>
+                <a href="#" class="menu-item flex items-center px-2 py-2 mb-2 rounded-xl text-gray-400" data-page="settings">
+                    <i data-lucide="settings" class="w-4 h-4"></i>
+                    <span class="ml-2 font-medium menu-text text-sm">Setting</span>
+                </a>
+                <a href="#" class="menu-item flex items-center px-2 py-2 mb-2 rounded-xl text-gray-400" data-page="logout">
+                    <i data-lucide="log-out" class="w-4 h-4"></i>
+                    <span class="ml-2 font-medium menu-text text-sm">Logout</span>
+                </a>
+            </nav>
+            <!-- Footer -->
+            <div id="sidebar-footer" class="absolute bottom-4 left-2 right-2">
+                <div class="gradient-card p-3 rounded-xl gradient-border">
+                    <div class="text-center">
+                        <div class="w-6 h-6 bg-amber-400 rounded-full mx-auto mb-1 flex items-center justify-center">
+                            <span class="text-xs font-bold text-black">BX</span>
+                        </div>
+                        <p class="text-xs text-gray-400">Premium Member</p>
+                        <p class="text-sm font-semibold text-amber-400">VIP Access</p>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <!-- Stats Cards -->
-        <div class=\"grid-5\">
-            <div class=\"stat-card\">
-                <div id=\"totalLogs\" class=\"stat-number text-white\">0</div>
-                <div class=\"stat-label\">Total Logs</div>
-            </div>
-            <div class=\"stat-card\">
-                <div id=\"infoCount\" class=\"stat-number text-blue\">0</div>
-                <div class=\"stat-label\">Info</div>
-            </div>
-            <div class=\"stat-card\">
-                <div id=\"statusCount\" class=\"stat-number text-purple\">0</div>
-                <div class=\"stat-label\">Status</div>
-            </div>
-            <div class=\"stat-card\">
-                <div id=\"successCount\" class=\"stat-number text-green\">0</div>
-                <div class=\"stat-label\">Success</div>
-            </div>
-            <div class=\"stat-card\">
-                <div id=\"errorCount\" class=\"stat-number text-red\">0</div>
-                <div class=\"stat-label\">Error</div>
-            </div>
-        </div>
-
-        <!-- Log Controls -->
-        <div class=\"card controls\">
-            <div class=\"filter-group\">
-                <svg width=\"18\" height=\"18\" fill=\"none\" stroke=\"rgba(255,255,255,0.6)\" viewBox=\"0 0 24 24\">
-                    <polygon points=\"22,3 2,3 10,12.46 10,19 14,21 14,12.46\"></polygon>
-                </svg>
-                <span class=\"text-gray text-sm\">Filter:</span>
-                <select id=\"filterSelect\" class=\"select\" style=\"width: auto; min-width: 150px;\">
-                    <option value=\"all\">Semua Level</option>
-                    <option value=\"info\">Info</option>
-                    <option value=\"status\">Status</option>
-                    <option value=\"success\">Success</option>
-                    <option value=\"error\">Error</option>
-                </select>
-            </div>
-            <div class=\"button-group\">
-                <button id=\"clearButton\" class=\"btn btn-outline\">
-                    <svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
-                        <polyline points=\"1 4 1 10 7 10\"></polyline>
-                        <path d=\"M3.51 15a9 9 0 1 0 2.13-9.36L1 10\"></path>
-                    </svg>
-                    Clear
-                </button>
-                <button id=\"copyButton\" class=\"btn btn-outline\">
-                    <svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
-                        <rect x=\"9\" y=\"9\" width=\"13\" height=\"13\" rx=\"2\" ry=\"2\"></rect>
-                        <path d=\"M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1\"></path>
-                    </svg>
-                    Copy
-                </button>
-                <button id=\"exportButton\" class=\"btn btn-outline\">
-                    <svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
-                        <path d=\"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3\"></path>
-                    </svg>
-                    Export
-                </button>
-            </div>
-        </div>
-
-        <!-- Log Display -->
-        <div class=\"log-container\">
-            <div style=\"display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;\">
-                <div style=\"display: flex; align-items: center; gap: 10px;\">
-                    <svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"#28a745\" viewBox=\"0 0 24 24\">
-                        <circle cx=\"12\" cy=\"12\" r=\"10\"></circle>
-                        <polyline points=\"12,6 12,12 16,14\"></polyline>
-                    </svg>
-                    <h3 style=\"color: white;\">Live Mining Log</h3>
-                    <span style=\"background: linear-gradient(45deg, #ff6b35, #f7931e); padding: 4px 12px; border-radius: 15px; font-size: 0.7rem; font-weight: bold;\">BOSSX POOL</span>
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col min-w-0">
+            <!-- Header -->
+            <header class="bg-gradient-to-r from-gray-900 via-black to-gray-900 border-b border-amber-500/20 px-4 py-3">
+                <div class="flex items-center justify-between">
+                    <!-- Real-time Clock -->
+                    <div class="flex flex-col">
+                        <div id="time" class="text-amber-400 text-lg font-bold">
+                            00:00:00
+                        </div>
+                        <div id="date" class="text-gray-400 text-sm">
+                            Loading...
+                        </div>
+                    </div>
+                    <!-- Search Bar -->
+                    <div class="flex-1 max-w-sm mx-4">
+                        <div class="relative">
+                            <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4"></i>
+                            <input
+                                type="text"
+                                placeholder="Cari cryptocurrency, transaksi..."
+                                class="w-full pl-10 pr-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500/20"
+                            />
+                        </div>
+                    </div>
+                    <!-- Right Side Actions -->
+                    <div class="flex items-center space-x-3">
+                        <!-- Market Status -->
+                        <div class="flex items-center space-x-2 px-2 py-1 bg-green-500/10 rounded-lg border border-green-500/20">
+                            <i data-lucide="globe" class="w-4 h-4 text-green-400"></i>
+                            <span class="text-green-400 text-sm font-medium">Market Open</span>
+                        </div>
+                        <!-- Notifications -->
+                        <button class="relative text-gray-400 hover:text-amber-400 hover:bg-amber-500/10 p-2 rounded">
+                            <i data-lucide="bell" class="w-4 h-4"></i>
+                            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                                3
+                            </span>
+                        </button>
+                        <!-- User Profile -->
+                        <div class="flex items-center space-x-2 px-2 py-1 bg-gray-800/50 rounded-lg border border-gray-700 hover:border-amber-500/50 transition-colors cursor-pointer">
+                            <div class="profile-picture">
+                                <img src="https://i.ibb.co/gbVsGLy0/FB-IMG-1617237754232.jpg" alt="Fery Muliawan" onerror="this.style.display='none'; this.parentNode.innerHTML='<div style=\\'background: linear-gradient(145deg, #3b82f6, #2563eb); color: white; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.75rem; border-radius: 50%;\\'>FM</div>'" />
+                            </div>
+                            <div class="text-sm">
+                                <p class="text-white font-medium">Fery Muliawan</p>
+                                <p class="text-amber-400 text-xs">Validator: 8055x</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div id=\"logCounter\" class=\"text-sm text-gray\" style=\"font-family: 'Courier New', monospace;\">
-                    0 / 0 entries
+            </header>
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-auto">
+                <div id="content" class="content-container space-y-4">
+                    <!-- Dashboard Page -->
+                    <div id="dashboard-page" class="page-content active">
+                        <!-- Running Text / Ticker -->
+                        <div class="bg-gray-900 border border-amber-500/20 rounded-xl p-3 overflow-hidden">
+                            <div class="relative">
+                                <div id="running-text" class="whitespace-nowrap text-amber-400 font-medium text-sm">
+                                    🔥 BTC +5.2% $35,000 • ETH +3.8% $1,875 • BNB -1.2% $206 • ADA +7.1% $0.52 • SOL +12.5% $98 • DOT +2.3% $6.75 • MATIC +8.9% $0.89 • LINK +4.2% $14.30 • UNI +6.7% $7.25 • AVAX +9.1% $28.40 • Market Cap: $1.2T • 24h Vol: $45.6B 🚀 | BossX Validator Masternode System Active
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 4 Stats Cards Horizontal -->
+                        <div class="stats-grid">
+                            <!-- Card 1: Aktivasi Node -->
+                            <div class="stat-card hover-scale">
+                                <!-- Corner Dots -->
+                                <div class="corner-dot top-left"></div>
+                                <div class="corner-dot top-right"></div>
+                                <div class="corner-dot bottom-right"></div>
+                                <div class="corner-dot bottom-left"></div>
+                                <!-- Border Lines -->
+                                <div class="border-line border-top"></div>
+                                <div class="border-line border-right"></div>
+                                <div class="border-line border-bottom"></div>
+                                <div class="border-line border-left"></div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <p class="text-sm text-gray-400">Aktivasi Node</p>
+                                    <i data-lucide="cpu" class="w-4 h-4 text-amber-400"></i>
+                                </div>
+                                <div class="text-lg font-bold text-white mb-3">
+                                    <span id="bossx-balance">1000 BossX</span>
+                                </div>
+                                <div class="space-y-3">
+                                    <input 
+                                        id="activation-input"
+                                        type="number" 
+                                        placeholder="Minimal 10 BossX" 
+                                        class="node-input"
+                                        min="10"
+                                        step="0.000000001"
+                                    />
+                                    <button id="activation-button" class="node-button" onclick="activateNode()">
+                                        Aktivasi Node
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Card 2: Validasi Running -->
+                            <div class="stat-card hover-scale">
+                                <!-- Corner Dots -->
+                                <div class="corner-dot top-left"></div>
+                                <div class="corner-dot top-right"></div>
+                                <div class="corner-dot bottom-right"></div>
+                                <div class="corner-dot bottom-left"></div>
+                                <!-- Border Lines -->
+                                <div class="border-line border-top"></div>
+                                <div class="border-line border-right"></div>
+                                <div class="border-line border-bottom"></div>
+                                <div class="border-line border-left"></div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <p class="text-sm text-gray-400">Validasi Running</p>
+                                    <i data-lucide="zap" class="w-4 h-4 text-green-400"></i>
+                                </div>
+                                <div class="text-lg font-bold text-white mb-3">
+                                    <span id="validation-balance">0,000000000 BossX</span>
+                                </div>
+                                <div class="text-center space-y-3">
+                                    <p id="validation-status" class="text-sm text-gray-400">Belum berjalan</p>
+                                    <div id="countdown-display" class="countdown-timer" style="display: none;">
+                                        Countdown: <span id="countdown-time">00:00:00</span>
+                                    </div>
+                                    <div class="flex justify-center">
+                                        <button id="power-btn" class="power-button off" onclick="togglePower()">
+                                            <i id="power-icon" data-lucide="power" class="power-icon"></i>
+                                        </button>
+                                    </div>
+                                    <p id="power-status" class="text-xs text-gray-500" style="display: none;">
+                                        Masternode sedang running - Auto stop jam 06:00
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- Card 3: Reward Validasi -->
+                            <div class="stat-card hover-scale">
+                                <!-- Corner Dots -->
+                                <div class="corner-dot top-left"></div>
+                                <div class="corner-dot top-right"></div>
+                                <div class="corner-dot bottom-right"></div>
+                                <div class="corner-dot bottom-left"></div>
+                                <!-- Border Lines -->
+                                <div class="border-line border-top"></div>
+                                <div class="border-line border-right"></div>
+                                <div class="border-line border-bottom"></div>
+                                <div class="border-line border-left"></div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <p class="text-sm text-gray-400">Reward Validasi</p>
+                                    <i data-lucide="gift" class="w-4 h-4 text-blue-400"></i>
+                                </div>
+                                <div class="text-lg font-bold text-white mb-3">
+                                    <span id="reward-balance">0,000000000 BossX</span>
+                                </div>
+                                <div class="space-y-3">
+                                    <p class="text-xs text-blue-400">
+                                        Auto claim in: <span id="auto-claim-timer" class="auto-claim-timer">--</span>s
+                                    </p>
+                                    <button class="node-button convert-button" onclick="convertToUSDT()">
+                                        Convert To USDT
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Card 4: Balance USDT -->
+                            <div class="stat-card hover-scale">
+                                <!-- Corner Dots -->
+                                <div class="corner-dot top-left"></div>
+                                <div class="corner-dot top-right"></div>
+                                <div class="corner-dot bottom-right"></div>
+                                <div class="corner-dot bottom-left"></div>
+                                <!-- Border Lines -->
+                                <div class="border-line border-top"></div>
+                                <div class="border-line border-right"></div>
+                                <div class="border-line border-bottom"></div>
+                                <div class="border-line border-left"></div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <p class="text-sm text-gray-400">Balance USDT</p>
+                                    <i data-lucide="dollar-sign" class="w-4 h-4 text-green-400"></i>
+                                </div>
+                                <div class="text-2xl font-bold text-white">
+                                    <span id="usdt-balance">1000 USDT</span>
+                                </div>
+                                <p class="text-xs text-green-400 mt-1">Available balance</p>
+                            </div>
+                        </div>
+                        <!-- Log Engine Masternode -->
+                        <div id="log-engine" class="bg-gray-900 border border-amber-500/20 rounded-xl p-4 mt-6">
+                            <h3 class="text-lg font-semibold text-amber-400 mb-3">Log Engine Masternode</h3>
+                            <pre id="log-output" class="bg-black p-4 rounded-lg overflow-y-auto h-64 text-sm text-gray-300 font-mono whitespace-pre-wrap"></pre>
+                        </div>
+                        <!-- System Status Information -->
+                        <div class="bg-gray-900 border border-blue-500/20 rounded-xl p-4 mt-6">
+                            <div class="flex items-center mb-3">
+                                <i data-lucide="info" class="w-5 h-5 text-blue-400 mr-2"></i>
+                                <h3 class="text-lg font-semibold text-blue-400">Informasi Sistem BossX Validator</h3>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-300">
+                                <div>
+                                    <p><strong>• Node Status:</strong> <span id="node-status">Belum Aktif</span></p>
+                                    <p><strong>• Auto Stop:</strong> Setiap hari jam 06:00</p>
+                                    <p><strong>• Auto Claim:</strong> Hanya saat validasi running</p>
+                                </div>
+                                <div>
+                                    <p><strong>• Minimal Aktivasi:</strong> 10 BossX</p>
+                                    <p><strong>• Minimal Convert:</strong> 1 BossX</p>
+                                    <p><strong>• Rate Convert:</strong> 1 BossX = 1 USDT</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Deposit Page -->
+                    <div id="deposit-page" class="page-content">
+                        <!-- Header -->
+                        <div class="bg-gradient-to-r from-gray-900 via-black to-gray-900 border border-amber-500/20 rounded-xl p-6 mb-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h1 class="text-3xl font-bold text-amber-400 mb-2">Deposit Crypto</h1>
+                                    <p class="text-gray-400">Deposit USDT dan BOSSX ke wallet Anda dengan mudah dan aman</p>
+                                </div>
+                                <div class="crypto-icon-large">
+                                    <i data-lucide="wallet" class="text-amber-400 w-8 h-8"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Currency Tabs -->
+                        <div class="bg-gray-900 border border-amber-500/20 rounded-xl p-6 mb-6">
+                            <div class="flex space-x-4 mb-6">
+                                <button id="usdt-tab" class="tab-button active relative px-8 py-3 rounded-xl font-semibold transition-all duration-300 bg-gradient-to-r from-amber-500 to-orange-500 text-black">
+                                    USDT
+                                </button>
+                                <button id="bossx-tab" class="tab-button relative px-8 py-3 rounded-xl font-semibold transition-all duration-300 bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white">
+                                    BOSSX
+                                </button>
+                            </div>
+                            <!-- Deposit Content -->
+                            <div class="grid lg:grid-cols-2 gap-8">
+                                <!-- QR Code Section -->
+                                <div class="space-y-6">
+                                    <div class="stat-card p-6">
+                                        <!-- Corner Dots -->
+                                        <div class="corner-dot top-left"></div>
+                                        <div class="corner-dot top-right"></div>
+                                        <div class="corner-dot bottom-right"></div>
+                                        <div class="corner-dot bottom-left"></div>
+                                        <!-- Border Lines -->
+                                        <div class="border-line border-top"></div>
+                                        <div class="border-line border-right"></div>
+                                        <div class="border-line border-bottom"></div>
+                                        <div class="border-line border-left"></div>
+                                        <div class="text-center">
+                                            <h3 class="text-xl font-bold text-white mb-4 flex items-center justify-center">
+                                                <i data-lucide="qr-code" class="mr-2 text-amber-400 w-6 h-6"></i>
+                                                QR Code <span id="qr-currency">USDT</span>
+                                            </h3>
+                                            <div class="relative inline-block">
+                                                <img id="qr-code-image" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=TQ3HBNdVFmTFvz9wz3AR2Siss7MRN1fuRM" alt="QR Code" class="w-48 h-48 mx-auto border-4 border-amber-500/30 rounded-xl" />
+                                                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
+                                            </div>
+                                            <button id="download-qr" class="mt-4 flex items-center justify-center mx-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+                                                <i data-lucide="download" class="mr-2 w-4 h-4"></i>
+                                                Download QR Code
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Wallet Address Section -->
+                                <div class="space-y-6">
+                                    <div class="stat-card p-6">
+                                        <!-- Corner Dots -->
+                                        <div class="corner-dot top-left"></div>
+                                        <div class="corner-dot top-right"></div>
+                                        <div class="corner-dot bottom-right"></div>
+                                        <div class="corner-dot bottom-left"></div>
+                                        <!-- Border Lines -->
+                                        <div class="border-line border-top"></div>
+                                        <div class="border-line border-right"></div>
+                                        <div class="border-line border-bottom"></div>
+                                        <div class="border-line border-left"></div>
+                                        <h3 class="text-xl font-bold text-white mb-6 flex items-center">
+                                            <i data-lucide="wallet" class="mr-2 text-amber-400 w-6 h-6"></i>
+                                            Alamat Wallet <span id="wallet-currency">USDT</span>
+                                        </h3>
+                                        <div class="space-y-4">
+                                            <div class="bg-gray-800/50 border border-gray-700 rounded-xl p-4">
+                                                <p class="text-sm text-gray-400 mb-2">Network:</p>
+                                                <p class="text-white font-mono">TRON (TRC20)</p>
+                                            </div>
+                                            <div class="bg-gray-800/50 border border-gray-700 rounded-xl p-4">
+                                                <p class="text-sm text-gray-400 mb-2">Alamat Wallet:</p>
+                                                <div class="flex items-center space-x-2">
+                                                    <p id="wallet-address" class="text-white font-mono text-sm break-all flex-1">
+                                                        TQ3HBNdVFmTFvz9wz3AR2Siss7MRN1fuRM
+                                                    </p>
+                                                    <button id="copy-address" class="copy-button flex items-center px-3 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-black rounded-lg font-semibold hover:from-amber-600 hover:to-orange-600 transition-all duration-300 transform hover:scale-105">
+                                                        <i data-lucide="copy" class="mr-1 w-4 h-4"></i>
+                                                        Copy
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
+                                                <h4 class="text-blue-400 font-semibold mb-2 flex items-center">
+                                                    <i data-lucide="trending-up" class="mr-2 w-4 h-4"></i>
+                                                    Penting!
+                                                </h4>
+                                                <ul class="text-sm text-gray-300 space-y-1">
+                                                    <li id="warning-currency">• Hanya kirim USDT ke alamat ini</li>
+                                                    <li>• Pastikan menggunakan network TRON (TRC20)</li>
+                                                    <li id="min-deposit">• Minimal deposit: 10 USDT</li>
+                                                    <li>• Deposit akan dikonfirmasi setelah 1 konfirmasi network</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Deposit History -->
+                        <div class="bg-gray-900 border border-amber-500/20 rounded-xl p-6 mb-6">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="text-xl font-bold text-white flex items-center">
+                                    <i data-lucide="calendar" class="mr-2 text-amber-400 w-6 h-6"></i>
+                                    History Deposit <span id="history-currency">USDT</span>
+                                </h3>
+                                <button id="refresh-history" class="flex items-center px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors">
+                                    <i data-lucide="refresh-cw" class="mr-2 w-4 h-4"></i>
+                                    Refresh
+                                </button>
+                            </div>
+                            <div id="history-content">
+                                <!-- History table will be inserted here -->
+                            </div>
+                        </div>
+                        <!-- Statistics Cards -->
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <div class="stat-card p-6">
+                                <div class="corner-dot top-left"></div>
+                                <div class="corner-dot top-right"></div>
+                                <div class="corner-dot bottom-right"></div>
+                                <div class="corner-dot bottom-left"></div>
+                                <div class="border-line border-top"></div>
+                                <div class="border-line border-right"></div>
+                                <div class="border-line border-bottom"></div>
+                                <div class="border-line border-left"></div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <h4 class="text-gray-400">Total Deposit</h4>
+                                    <i data-lucide="trending-up" class="text-green-400 w-5 h-5"></i>
+                                </div>
+                                <div id="total-deposits" class="text-2xl font-bold text-white">
+                                    2
+                                </div>
+                                <p class="text-sm text-green-400 mt-1">Transaksi berhasil</p>
+                            </div>
+                            <div class="stat-card p-6">
+                                <div class="corner-dot top-left"></div>
+                                <div class="corner-dot top-right"></div>
+                                <div class="corner-dot bottom-right"></div>
+                                <div class="corner-dot bottom-left"></div>
+                                <div class="border-line border-top"></div>
+                                <div class="border-line border-right"></div>
+                                <div class="border-line border-bottom"></div>
+                                <div class="border-line border-left"></div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <h4 class="text-gray-400">Total Amount</h4>
+                                    <i data-lucide="wallet" class="text-amber-400 w-5 h-5"></i>
+                                </div>
+                                <div id="total-amount" class="text-2xl font-bold text-white">
+                                    351.25
+                                </div>
+                                <p id="amount-currency" class="text-sm text-amber-400 mt-1">USDT</p>
+                            </div>
+                            <div class="stat-card p-6">
+                                <div class="corner-dot top-left"></div>
+                                <div class="corner-dot top-right"></div>
+                                <div class="corner-dot bottom-right"></div>
+                                <div class="corner-dot bottom-left"></div>
+                                <div class="border-line border-top"></div>
+                                <div class="border-line border-right"></div>
+                                <div class="border-line border-bottom"></div>
+                                <div class="border-line border-left"></div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <h4 class="text-gray-400">Pending</h4>
+                                    <i data-lucide="loader" class="text-yellow-400 w-5 h-5"></i>
+                                </div>
+                                <div id="pending-deposits" class="text-2xl font-bold text-white">
+                                    1
+                                </div>
+                                <p class="text-sm text-yellow-400 mt-1">Menunggu konfirmasi</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Withdrawal Page -->
+                    <div id="withdrawal-page" class="page-content">
+                        <!-- Header -->
+                        <div class="bg-gradient-to-r from-gray-900 via-black to-gray-900 border border-red-500/20 rounded-xl p-6 mb-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h1 class="text-3xl font-bold text-red-400 mb-2">Withdrawal Crypto</h1>
+                                    <p class="text-gray-400">Tarik USDT dan BOSSX dari wallet Anda dengan aman dan cepat</p>
+                                </div>
+                                <div class="crypto-icon-large">
+                                    <i data-lucide="arrow-up-circle" class="text-red-400 w-8 h-8"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Currency Tabs -->
+                        <div class="bg-gray-900 border border-red-500/20 rounded-xl p-6 mb-6">
+                            <div class="flex space-x-4 mb-6">
+                                <button id="withdrawal-usdt-tab" class="tab-button active relative px-8 py-3 rounded-xl font-semibold transition-all duration-300 bg-gradient-to-r from-red-500 to-red-600 text-white">
+                                    USDT
+                                </button>
+                                <button id="withdrawal-bossx-tab" class="tab-button relative px-8 py-3 rounded-xl font-semibold transition-all duration-300 bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white">
+                                    BOSSX
+                                </button>
+                            </div>
+                            <!-- Withdrawal Form -->
+                            <div class="grid lg:grid-cols-2 gap-8">
+                                <!-- Balance & Form Section -->
+                                <div class="space-y-6">
+                                    <div class="stat-card p-6">
+                                        <!-- Corner Dots -->
+                                        <div class="corner-dot top-left"></div>
+                                        <div class="corner-dot top-right"></div>
+                                        <div class="corner-dot bottom-right"></div>
+                                        <div class="corner-dot bottom-left"></div>
+                                        <!-- Border Lines -->
+                                        <div class="border-line border-top"></div>
+                                        <div class="border-line border-right"></div>
+                                        <div class="border-line border-bottom"></div>
+                                        <div class="border-line border-left"></div>
+                                        <h3 class="text-xl font-bold text-white mb-6 flex items-center">
+                                            <i data-lucide="wallet" class="mr-2 text-red-400 w-6 h-6"></i>
+                                            Balance <span id="withdrawal-currency">USDT</span>
+                                        </h3>
+                                        <div class="text-center mb-6">
+                                            <div class="text-3xl font-bold text-green-400 mb-2">
+                                                <span id="withdrawal-balance">50.00 USDT</span>
+                                            </div>
+                                            <p class="text-sm text-gray-400">Saldo tersedia</p>
+                                        </div>
+                                        <div class="space-y-4">
+                                            <!-- Network Selection -->
+                                            <div id="network-selection" class="space-y-3">
+                                                <label class="text-sm text-gray-400">Pilih Network:</label>
+                                                <div class="grid grid-cols-2 gap-3">
+                                                    <label class="network-option selected">
+                                                        <input type="radio" name="withdrawal-network" value="TRC20" checked>
+                                                        <div class="flex items-center justify-between">
+                                                            <span class="font-semibold text-white">TRC20</span>
+                                                            <span class="text-xs text-gray-400">TRON</span>
+                                                        </div>
+                                                        <div class="text-xs text-gray-500 mt-1">Fee: 1 USDT</div>
+                                                    </label>
+                                                    <label class="network-option">
+                                                        <input type="radio" name="withdrawal-network" value="BEP20">
+                                                        <div class="flex items-center justify-between">
+                                                            <span class="font-semibold text-white">BEP20</span>
+                                                            <span class="text-xs text-gray-400">BSC</span>
+                                                        </div>
+                                                        <div class="text-xs text-gray-500 mt-1">Fee: 1 USDT</div>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <!-- Withdrawal Address -->
+                                            <div class="space-y-2">
+                                                <label class="text-sm text-gray-400">Alamat Wallet Tujuan:</label>
+                                                <input 
+                                                    id="withdrawal-address"
+                                                    type="text" 
+                                                    placeholder="Masukkan alamat wallet tujuan" 
+                                                    class="node-input"
+                                                />
+                                            </div>
+                                            <!-- Withdrawal Amount -->
+                                            <div class="space-y-2">
+                                                <label class="text-sm text-gray-400">Jumlah Withdrawal:</label>
+                                                <div class="relative">
+                                                    <input 
+                                                        id="withdrawal-amount"
+                                                        type="number" 
+                                                        placeholder="0.00" 
+                                                        class="node-input pr-16"
+                                                        step="0.01"
+                                                        min="0"
+                                                    />
+                                                    <button id="max-withdrawal" class="absolute right-2 top-1/2 transform -translate-y-1/2 px-2 py-1 bg-amber-500 text-black text-xs rounded font-semibold hover:bg-amber-600 transition-colors">
+                                                        MAX
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Summary & Confirmation Section -->
+                                <div class="space-y-6">
+                                    <div class="stat-card p-6">
+                                        <!-- Corner Dots -->
+                                        <div class="corner-dot top-left"></div>
+                                        <div class="corner-dot top-right"></div>
+                                        <div class="corner-dot bottom-right"></div>
+                                        <div class="corner-dot bottom-left"></div>
+                                        <!-- Border Lines -->
+                                        <div class="border-line border-top"></div>
+                                        <div class="border-line border-right"></div>
+                                        <div class="border-line border-bottom"></div>
+                                        <div class="border-line border-left"></div>
+                                        <h3 class="text-xl font-bold text-white mb-6 flex items-center">
+                                            <i data-lucide="file-text" class="mr-2 text-red-400 w-6 h-6"></i>
+                                            Ringkasan Withdrawal
+                                        </h3>
+                                        <div class="space-y-4">
+                                            <div class="bg-gray-800/50 border border-gray-700 rounded-xl p-4">
+                                                <div class="flex justify-between items-center mb-2">
+                                                    <span class="text-gray-400">Network:</span>
+                                                    <span id="summary-network" class="text-white font-mono">TRC20</span>
+                                                </div>
+                                                <div class="flex justify-between items-center mb-2">
+                                                    <span class="text-gray-400">Jumlah:</span>
+                                                    <span id="summary-amount" class="text-white font-mono">0.00</span>
+                                                </div>
+                                                <div class="flex justify-between items-center mb-2">
+                                                    <span class="text-gray-400">Fee:</span>
+                                                    <span id="summary-fee" class="text-red-400 font-mono">1.00</span>
+                                                </div>
+                                                <hr class="border-gray-600 my-3">
+                                                <div class="flex justify-between items-center">
+                                                    <span class="text-gray-400 font-semibold">Total Diterima:</span>
+                                                    <span id="summary-received" class="text-green-400 font-mono font-bold">0.00</span>
+                                                </div>
+                                            </div>
+                                            <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4">
+                                                <h4 class="text-yellow-400 font-semibold mb-2 flex items-center">
+                                                    <i data-lucide="alert-triangle" class="mr-2 w-4 h-4"></i>
+                                                    Perhatian!
+                                                </h4>
+                                                <ul class="text-sm text-gray-300 space-y-1">
+                                                    <li id="withdrawal-min">• Minimal withdrawal: 10 USDT</li>
+                                                    <li id="withdrawal-fee">• Fee withdrawal: 1 USDT</li>
+                                                    <li>• Periksa kembali alamat tujuan sebelum konfirmasi</li>
+                                                    <li>• Proses withdrawal membutuhkan waktu 1-24 jam</li>
+                                                </ul>
+                                            </div>
+                                            <button id="withdrawal-submit" class="node-button withdrawal-button" onclick="submitWithdrawal()">
+                                                <i data-lucide="send" class="mr-2 w-4 h-4"></i>
+                                                Submit Withdrawal
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Withdrawal History -->
+                        <div class="bg-gray-900 border border-red-500/20 rounded-xl p-6 mb-6">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="text-xl font-bold text-white flex items-center">
+                                    <i data-lucide="calendar" class="mr-2 text-red-400 w-6 h-6"></i>
+                                    History Withdrawal <span id="withdrawal-history-currency">USDT</span>
+                                </h3>
+                                <button id="refresh-withdrawal-history" class="flex items-center px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors">
+                                    <i data-lucide="refresh-cw" class="mr-2 w-4 h-4"></i>
+                                    Refresh
+                                </button>
+                            </div>
+                            <div id="withdrawal-history-content">
+                                <!-- History table will be inserted here -->
+                            </div>
+                        </div>
+                        <!-- Statistics Cards -->
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <div class="stat-card p-6">
+                                <div class="corner-dot top-left"></div>
+                                <div class="corner-dot top-right"></div>
+                                <div class="corner-dot bottom-right"></div>
+                                <div class="corner-dot bottom-left"></div>
+                                <div class="border-line border-top"></div>
+                                <div class="border-line border-right"></div>
+                                <div class="border-line border-bottom"></div>
+                                <div class="border-line border-left"></div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <h4 class="text-gray-400">Total Withdrawal</h4>
+                                    <i data-lucide="trending-down" class="text-red-400 w-5 h-5"></i>
+                                </div>
+                                <div id="total-withdrawals" class="text-2xl font-bold text-white">
+                                    0
+                                </div>
+                                <p class="text-sm text-red-400 mt-1">Transaksi berhasil</p>
+                            </div>
+                            <div class="stat-card p-6">
+                                <div class="corner-dot top-left"></div>
+                                <div class="corner-dot top-right"></div>
+                                <div class="corner-dot bottom-right"></div>
+                                <div class="corner-dot bottom-left"></div>
+                                <div class="border-line border-top"></div>
+                                <div class="border-line border-right"></div>
+                                <div class="border-line border-bottom"></div>
+                                <div class="border-line border-left"></div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <h4 class="text-gray-400">Total Amount</h4>
+                                    <i data-lucide="wallet" class="text-red-400 w-5 h-5"></i>
+                                </div>
+                                <div id="total-withdrawal-amount" class="text-2xl font-bold text-white">
+                                    0.00
+                                </div>
+                                <p id="withdrawal-amount-currency" class="text-sm text-red-400 mt-1">USDT</p>
+                            </div>
+                            <div class="stat-card p-6">
+                                <div class="corner-dot top-left"></div>
+                                <div class="corner-dot top-right"></div>
+                                <div class="corner-dot bottom-right"></div>
+                                <div class="corner-dot bottom-left"></div>
+                                <div class="border-line border-top"></div>
+                                <div class="border-line border-right"></div>
+                                <div class="border-line border-bottom"></div>
+                                <div class="border-line border-left"></div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <h4 class="text-gray-400">Processing</h4>
+                                    <i data-lucide="loader" class="text-yellow-400 w-5 h-5"></i>
+                                </div>
+                                <div id="processing-withdrawals" class="text-2xl font-bold text-white">
+                                    0
+                                </div>
+                                <p class="text-sm text-yellow-400 mt-1">Sedang diproses</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ✅ HALAMAN CHAT ROOM SUDAH DITAMBAHKAN KEMBALI -->
+                    <div id="chat-room-page" class="page-content">
+                        <div id="chat-room-container" class="w-full h-full"></div>
+                    </div>
+                    <!-- END HALAMAN BARU -->
+                    <!-- Other Pages -->
+                    <div id="p2p-page" class="page-content">
+                        <div class="p-6">
+                            <h1 class="text-2xl font-bold text-amber-400 mb-4">Peer to Peer</h1>
+                            <p class="text-gray-400">Fitur Peer to Peer akan segera hadir...</p>
+                        </div>
+                    </div>
+                    <div id="faq-page" class="page-content">
+                        <div class="p-6">
+                            <h1 class="text-2xl font-bold text-amber-400 mb-4">FAQ</h1>
+                            <p class="text-gray-400">Fitur FAQ akan segera hadir...</p>
+                        </div>
+                    </div>
+                    <div id="settings-page" class="page-content">
+                        <div class="p-6">
+                            <h1 class="text-2xl font-bold text-amber-400 mb-4">Settings</h1>
+                            <p class="text-gray-400">Fitur Settings akan segera hadir...</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <div id=\"logContainer\" class=\"log-display\">
-                <div id=\"emptyState\" style=\"text-align: center; padding: 50px 20px; color: rgba(255,255,255,0.6);\">
-                    <div style=\"font-size: 1.1rem; margin-bottom: 10px;\">Menunggu aktivasi masternode...</div>
-                    <div style=\"font-size: 0.9rem;\">Masukkan konfigurasi node dan klik aktivasi untuk memulai</div>
-                </div>
-            </div>
+            </main>
         </div>
     </div>
 
     <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
         // Global variables
-        var logs = [];
-        var currentFilter = 'all';
-        var logIdCounter = 1;
-        var nodeConfig = '';
-        var isNodeActivated = false;
-        var isPowerOn = false;
-        var autoClaimInterval = null;
-        var countdownInterval = null;
-        var shareNumber = 0;
-        var countdownSeconds = 60;
-
-        // Add log function
-        function addLog(type, level, message) {
-            var now = new Date();
-            var timestamp = now.toISOString().slice(0, 19).replace('T', ' ');
-            
-            var newLog = {
-                id: logIdCounter++,
-                timestamp: timestamp,
-                type: type,
-                level: level.toUpperCase(),
-                message: message
+        let currentPage = 'dashboard';
+        let activeTab = 'USDT';
+        let activeWithdrawalTab = 'USDT';
+        // Dashboard variables
+        let isNodeActive = false;
+        let isValidationRunning = false;
+        let countdownInterval;
+        let autoClaimInterval = null;
+        let autoClaimSeconds = 60;
+        let validationInterval;
+        let currentValidationReward = 0; // Akumulasi sementara (Validasi Running)
+        let totalRewardBalance = 0; // Akumulasi permanen (Reward Validasi)
+        let usdtBalance = 1000; // Demo balance untuk withdrawal
+        let bossxBalance = 1000; // Starting balance for demo
+        let stakedAmount = 0; // Jumlah BossX yang di-stake
+        let shareCounter = 0; // Counter for auto-claim shares
+        let logInterval; // Interval for periodic logs
+        // Deposit & Withdrawal variables
+        const walletAddresses = {
+            USDT: {
+                address: 'TQ3HBNdVFmTFvz9wz3AR2Siss7MRN1fuRM',
+                qrCode: 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=TQ3HBNdVFmTFvz9wz3AR2Siss7MRN1fuRM'
+            },
+            BOSSX: {
+                address: 'TTfKjrU18mi223ukVmz6FMNgBkma13kVA3',
+                qrCode: 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=TTfKjrU18mi223ukVmz6FMNgBkma13kVA3'
+            }
+        };
+        const withdrawalConfig = {
+            USDT: {
+                networks: {
+                    TRC20: { fee: 1, min: 10 },
+                    BEP20: { fee: 1, min: 10 }
+                }
+            },
+            BOSSX: {
+                networks: {
+                    TRC20: { fee: 0.1, min: 1 }
+                }
+            }
+        };
+        const depositHistory = {
+            USDT: [
+                {
+                    id: '1',
+                    amount: 100.50,
+                    txHash: 'a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef1234',
+                    fromAddress: 'TXyza123456789012345678901234567890',
+                    status: 'confirmed',
+                    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+                    confirmationCount: 1
+                },
+                {
+                    id: '2',
+                    amount: 250.75,
+                    txHash: 'b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef1234a1',
+                    fromAddress: 'TYzab234567890123456789012345678901',
+                    status: 'confirmed',
+                    timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
+                    confirmationCount: 1
+                },
+                {
+                    id: '3',
+                    amount: 50.00,
+                    txHash: 'c3d4e5f6789012345678901234567890abcdef1234567890abcdef1234a1b2',
+                    fromAddress: 'TZabc345678901234567890123456789012',
+                    status: 'pending',
+                    timestamp: new Date(Date.now() - 30 * 60 * 1000), // 30 minutes ago
+                    confirmationCount: 0
+                }
+            ],
+            BOSSX: [
+                {
+                    id: '4',
+                    amount: 1000.0,
+                    txHash: 'd4e5f6789012345678901234567890abcdef1234567890abcdef1234a1b2c3',
+                    fromAddress: 'TAbcd456789012345678901234567890123',
+                    status: 'confirmed',
+                    timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5 hours ago
+                    confirmationCount: 1
+                },
+                {
+                    id: '5',
+                    amount: 500.0,
+                    txHash: 'e5f6789012345678901234567890abcdef1234567890abcdef1234a1b2c3d4',
+                    fromAddress: 'TBcde567890123456789012345678901234',
+                    status: 'confirmed',
+                    timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+                    confirmationCount: 1
+                },
+                {
+                    id: '6',
+                    amount: 2000.0,
+                    txHash: 'f6789012345678901234567890abcdef1234567890abcdef1234a1b2c3d4e5',
+                    fromAddress: 'TCdef678901234567890123456789012345',
+                    status: 'pending',
+                    timestamp: new Date(Date.now() - 15 * 60 * 1000), // 15 minutes ago
+                    confirmationCount: 0
+                }
+            ]
+        };
+        const withdrawalHistory = {
+            USDT: [],
+            BOSSX: []
+        };
+        // Real-time clock
+        function updateClock() {
+            const now = new Date();
+            const timeOptions = { 
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
             };
-            
-            logs.unshift(newLog);
-            
-            if (logs.length > 100) {
-                logs = logs.slice(0, 100);
-            }
-            
-            updateUI();
-            
-            var container = document.getElementById('logContainer');
-            if (container && getFilteredLogs().length > 10) {
-                container.scrollTop = 0;
-            }
+            const dateOptions = { 
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            document.getElementById('time').textContent = now.toLocaleTimeString('id-ID', timeOptions);
+            document.getElementById('date').textContent = now.toLocaleDateString('id-ID', dateOptions);
         }
-
-        // Update UI
-        function updateUI() {
-            updateStats();
-            updateLogDisplay();
-            updateLogCounter();
+        // Show success message
+        function showSuccessMessage(message) {
+            const existingMessage = document.querySelector('.success-message');
+            if (existingMessage) existingMessage.remove();
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'success-message';
+            messageDiv.textContent = message;
+            document.body.appendChild(messageDiv);
+            setTimeout(() => messageDiv.remove(), 3000);
         }
-
-        // Update stats
-        function updateStats() {
-            var stats = { info: 0, status: 0, success: 0, error: 0 };
-            
-            for (var i = 0; i < logs.length; i++) {
-                var logType = logs[i].type;
-                if (stats[logType] !== undefined) {
-                    stats[logType]++;
-                }
-            }
-
-            document.getElementById('totalLogs').textContent = logs.length;
-            document.getElementById('infoCount').textContent = stats.info;
-            document.getElementById('statusCount').textContent = stats.status;
-            document.getElementById('successCount').textContent = stats.success;
-            document.getElementById('errorCount').textContent = stats.error;
+        // Show error message
+        function showErrorMessage(message) {
+            const existingMessage = document.querySelector('.error-message');
+            if (existingMessage) existingMessage.remove();
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'error-message';
+            messageDiv.textContent = message;
+            document.body.appendChild(messageDiv);
+            setTimeout(() => messageDiv.remove(), 3000);
         }
-
-        // Get filtered logs
-        function getFilteredLogs() {
-            if (currentFilter === 'all') {
-                return logs;
-            }
-            return logs.filter(function(log) {
-                return log.type === currentFilter;
+        // Page navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page-content').forEach(page => page.classList.remove('active'));
+            const targetPage = document.getElementById(pageId + '-page');
+            if (targetPage) targetPage.classList.add('active');
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+                item.classList.add('text-gray-400');
             });
+            const activeMenuItem = document.querySelector(`[data-page="${pageId}"]`);
+            if (activeMenuItem) {
+                activeMenuItem.classList.add('active');
+                activeMenuItem.classList.remove('text-gray-400');
+            }
+            currentPage = pageId;
+            if (pageId === 'deposit') updateDepositContent();
+            else if (pageId === 'withdrawal') updateWithdrawalContent();
+            else if (pageId === 'chat-room') {
+                // Initialize Chat Room when navigating to it
+                setTimeout(() => initializeChatRoom(), 100);
+            }
         }
-
-        // Update log display
-        function updateLogDisplay() {
-            var container = document.getElementById('logContainer');
-            var emptyState = document.getElementById('emptyState');
-            
-            if (!container) return;
-            
-            var filteredLogs = getFilteredLogs();
-            
-            if (filteredLogs.length === 0) {
-                if (emptyState) {
-                    if (logs.length === 0) {
-                        emptyState.innerHTML = '<div style=\"font-size: 1.1rem; margin-bottom: 10px;\">Menunggu aktivasi masternode...</div><div style=\"font-size: 0.9rem;\">Masukkan konfigurasi node dan klik aktivasi untuk memulai</div>';
-                    } else {
-                        emptyState.innerHTML = '<div style=\"font-size: 1.1rem;\">Tidak ada log yang sesuai dengan filter \"' + currentFilter + '\"</div>';
-                    }
-                    emptyState.style.display = 'block';
-                }
-                container.innerHTML = '';
-                if (emptyState) {
-                    container.appendChild(emptyState);
-                }
+        // Function to get formatted timestamp
+        function getTimestamp() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const day = now.getDate().toString().padStart(2, '0');
+            const hour = now.getHours().toString().padStart(2, '0');
+            const minute = now.getMinutes().toString().padStart(2, '0');
+            const second = now.getSeconds().toString().padStart(2, '0');
+            return `[${year}-${month}-${day} ${hour}:${minute}:${second}]`;
+        }
+        // Function to append log
+        function appendLog(message) {
+            const logOutput = document.getElementById('log-output');
+            logOutput.textContent += message + '\n';
+            logOutput.scrollTop = logOutput.scrollHeight; // Auto scroll to bottom
+        }
+        // =============================
+        // DASHBOARD FUNCTIONS (REVISED)
+        // =============================
+        function activateNode() {
+            const inputValue = document.getElementById('activation-input').value;
+            const inputAmount = parseFloat(inputValue) || 0;
+            if (inputAmount < 10) {
+                showErrorMessage('Minimal 10 BossX diperlukan untuk aktivasi node!');
                 return;
             }
-
-            if (emptyState) {
-                emptyState.style.display = 'none';
-            }
-            
-            var logsHTML = '';
-            for (var i = 0; i < filteredLogs.length; i++) {
-                var log = filteredLogs[i];
-                var logClass = 'log-' + log.type;
-                
-                logsHTML += '<div class=\"log-entry ' + logClass + '\" onclick=\"copyLogEntry(' + log.id + ')\" style=\"cursor: pointer;\">' +
-                    '<span class=\"log-timestamp\">[' + log.timestamp + ']</span>' +
-                    '<span class=\"log-level\">[' + log.level + ']</span>' +
-                    '<span style=\"color: #e2e8f0;\">' + log.message + '</span>' +
-                '</div>';
-            }
-            
-            container.innerHTML = logsHTML;
-        }
-
-        // Update log counter
-        function updateLogCounter() {
-            var filteredCount = getFilteredLogs().length;
-            var logCounter = document.getElementById('logCounter');
-            if (logCounter) {
-                logCounter.textContent = filteredCount + ' / ' + logs.length + ' entries';
-            }
-        }
-
-        // Activate masternode
-        function activateMasternode() {
-            var nodeInput = document.getElementById('nodeInput');
-            var nodeValue = nodeInput.value.trim();
-            
-            if (!nodeValue) {
-                showToast('Input Required', 'Silakan masukkan konfigurasi node (contoh: 100 BossX)');
+            if (bossxBalance < inputAmount) {
+                showErrorMessage('Saldo BossX tidak mencukupi!');
                 return;
             }
-            
-            nodeConfig = nodeValue;
-            isNodeActivated = true;
-            
+            // Deduct BossX balance
+            bossxBalance -= inputAmount;
+            isNodeActive = true;
+            stakedAmount = inputAmount; // Simpan jumlah stake
             // Update UI
-            var headerDot = document.getElementById('headerDot');
-            var systemStatus = document.getElementById('systemStatus');
-            var powerButton = document.getElementById('powerButton');
-            var powerStatus = document.getElementById('powerStatus');
-            var activateButton = document.getElementById('activateButton');
-            
-            if (headerDot) headerDot.className = 'status-dot status-warning';
-            if (systemStatus) {
-                systemStatus.innerHTML = '<span class=\"status-dot status-warning\"></span> Node Activated';
-                systemStatus.style.background = 'rgba(40, 167, 69, 0.8)';
-            }
-            if (powerButton) {
-                powerButton.className = 'btn btn-success';
-                powerButton.disabled = false;
-            }
-            if (powerStatus) powerStatus.textContent = 'Ready for Power On';
-            if (activateButton) {
-                activateButton.className = 'btn btn-disabled';
-                activateButton.disabled = true;
-                activateButton.innerHTML = '<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M22 11.08V12a10 10 0 11-5.93-9.14\"></path><polyline points=\"22,4 12,14.01 9,11.01\"></polyline></svg> Node Activated';
-            }
-            
-            addLog('status', 'STATUS', 'User aktivasi Node ' + nodeConfig + ' Status Aktiv');
-            showToast('Masternode Activated', 'Node ' + nodeConfig + ' berhasil diaktivasi. Klik Power On untuk melanjutkan.');
+            const activationButton = document.getElementById('activation-button');
+            const activationInput = document.getElementById('activation-input');
+            activationButton.innerHTML = 'Node Aktif ✓';
+            activationButton.style.background = 'linear-gradient(145deg, #10b981, #059669)';
+            activationButton.disabled = true;
+            activationInput.disabled = true;
+            document.getElementById('node-status').textContent = 'Aktif';
+            document.getElementById('node-status').style.color = '#10b981';
+            // Reset reward counters
+            currentValidationReward = 0;
+            totalRewardBalance = 0;
+            // Add log entry for activation
+            appendLog(`${getTimestamp()} [STATUS] User aktivasi Node ${inputAmount} BossX Status Aktiv`);
+            // Update tampilan
+            updateBalanceDisplays();
+            showSuccessMessage(`Node aktif! Stake: ${inputAmount} BossX. Silakan tekan Power ON untuk mulai validasi.`);
         }
-
-        // Power On system
-        function powerOn() {
-            if (!isNodeActivated) return;
-            
-            isPowerOn = true;
-            
-            // Update UI
-            var headerDot = document.getElementById('headerDot');
-            var systemStatus = document.getElementById('systemStatus');
-            var powerButton = document.getElementById('powerButton');
-            var powerStatus = document.getElementById('powerStatus');
-            
-            if (headerDot) headerDot.className = 'status-dot status-active';
-            if (systemStatus) {
-                systemStatus.innerHTML = '<span class=\"status-dot status-active\"></span> Power On Active';
+        function startValidationRunning() {
+            if (!isNodeActive) {
+                showErrorMessage('Aktivasi node terlebih dahulu!');
+                return;
             }
-            if (powerButton) {
-                powerButton.className = 'btn btn-disabled';
-                powerButton.disabled = true;
-                powerButton.innerHTML = '<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M22 11.08V12a10 10 0 11-5.93-9.14\"></path><polyline points=\"22,4 12,14.01 9,11.01\"></polyline></svg> Power On Active';
-            }
-            if (powerStatus) powerStatus.textContent = 'System running...';
-            
-            addLog('info', 'INFO', 'Power On aktiv');
-            setTimeout(function() {
-                addLog('status', 'STATUS', 'Connected successfully to masternode Validasi Running');
-                startValidationProcess();
+            // Hitung reward per detik berdasarkan stake
+            const rewardPerSecond = stakedAmount * 0.000000038580246913580247;
+            // Mulai akumulasi per detik
+            validationInterval = setInterval(() => {
+                if (!isValidationRunning) return;
+                currentValidationReward += rewardPerSecond;
+                document.getElementById('validation-balance').textContent = currentValidationReward.toFixed(9) + ' BossX';
             }, 1000);
-            
-            showToast('Power On Activated', 'Sistem berhasil dihidupkan. Memulai proses validasi...');
+            // Add log entries for running
+            appendLog(`${getTimestamp()} [STATUS] Connected successfully to masternode Validasi Running`);
+            appendLog(`${getTimestamp()} [INFO] Connecting to master pool BossXPool.com:4444...`);
+            appendLog(`${getTimestamp()} [STATUS] Network sync: 100%`);
+            appendLog(`${getTimestamp()} [INFO] GPU#0: 48.3 MH/s | Temp: 68°C | Fan: 82%`);
+            // Start periodic log interval (every 10 seconds for example)
+            logInterval = setInterval(() => {
+                if (!isValidationRunning) return;
+                appendLog(`${getTimestamp()} [INFO] GPU#0: 48.3 MH/s | Temp: 68°C | Fan: 82%`);
+            }, 10000);
+            showSuccessMessage('Validasi dimulai! Reward mengalir per detik.');
         }
-
-        // Start validation process
-        function startValidationProcess() {
-            setTimeout(function() {
-                addLog('status', 'STATUS', 'Connected successfully to masternode Validasi Running');
-            }, 2000);
-            
-            setTimeout(function() {
-                addLog('info', 'INFO', 'Connecting to master pool BossXPool.com:4444...');
-            }, 4000);
-            
-            setTimeout(function() {
-                addLog('status', 'STATUS', 'Network sync: 100%');
-            }, 6000);
-            
-            setTimeout(function() {
-                addLog('info', 'INFO', 'GPU#0: 48.3 MH/s | Temp: 68°C | Fan: 82%');
-                startMiningProcess();
-            }, 8000);
+        function stopValidationRunning() {
+            if (validationInterval) {
+                clearInterval(validationInterval);
+                validationInterval = null;
+            }
+            if (logInterval) {
+                clearInterval(logInterval);
+                logInterval = null;
+            }
         }
-
-        // Start mining process
-        function startMiningProcess() {
-            var claimStatus = document.getElementById('claimStatus');
-            if (claimStatus) claimStatus.textContent = 'Auto claim active';
-            
-            startAutoClaim();
-            showToast('Mining Started', 'Proses mining dimulai. Auto claim setiap 60 detik.');
+        function performAutoClaim() {
+            if (!isValidationRunning || currentValidationReward <= 0) return;
+            // Pindahkan reward sementara ke reward permanen
+            totalRewardBalance += currentValidationReward;
+            shareCounter++;
+            // Tampilkan notifikasi
+            showSuccessMessage(`Auto Claim: +${currentValidationReward.toFixed(9)} BossX`);
+            // Add log entry for auto-claim
+            appendLog(`${getTimestamp()} [SUCCESS] Auto claim Accepted Share #${shareCounter.toString().padStart(2, '0')} (Diff: 12000) - Reward: ${currentValidationReward.toFixed(9)} BossX`);
+            // Reset akumulasi sementara
+            currentValidationReward = 0;
+            // Update tampilan
+            updateBalanceDisplays();
         }
-
-        // Start auto claim system
-        function startAutoClaim() {
-            countdownSeconds = 60;
-            shareNumber = 0;
-            
-            countdownInterval = setInterval(function() {
-                updateCountdown();
-            }, 1000);
-            
-            autoClaimInterval = setInterval(function() {
-                executeAutoClaim();
-            }, 60000);
-            
-            updateCountdown();
+        function convertToUSDT() {
+            if (totalRewardBalance < 1) {
+                showErrorMessage('Minimal 1 BossX diperlukan untuk konversi ke USDT!');
+                return;
+            }
+            const convertAmount = Math.floor(totalRewardBalance);
+            usdtBalance += convertAmount;
+            totalRewardBalance -= convertAmount;
+            updateBalanceDisplays();
+            showSuccessMessage(`Berhasil convert ${convertAmount} BossX ke ${convertAmount} USDT!`);
         }
-
-        // Update countdown timer
-        function updateCountdown() {
-            var claimCountdown = document.getElementById('claimCountdown');
-            if (claimCountdown) {
-                if (countdownSeconds <= 0) {
-                    countdownSeconds = 60;
-                    executeAutoClaim();
+        function updateBalanceDisplays() {
+            document.getElementById('bossx-balance').textContent = bossxBalance.toFixed(9) + ' BossX';
+            document.getElementById('validation-balance').textContent = currentValidationReward.toFixed(9) + ' BossX';
+            document.getElementById('reward-balance').textContent = totalRewardBalance.toFixed(9) + ' BossX';
+            document.getElementById('usdt-balance').textContent = usdtBalance.toFixed(2) + ' USDT';
+        }
+        function startAutoClaimCountdown() {
+            if (autoClaimInterval) {
+                clearInterval(autoClaimInterval);
+            }
+            autoClaimSeconds = 60;
+            function updateAutoClaimTimer() {
+                if (!isValidationRunning) {
+                    document.getElementById('auto-claim-timer').textContent = '--';
+                    return;
                 }
-                
-                var minutes = Math.floor(countdownSeconds / 60);
-                var seconds = countdownSeconds % 60;
-                var timeString = (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-                claimCountdown.textContent = timeString;
-                
-                countdownSeconds--;
-            }
-        }
-
-        // Execute auto claim
-        function executeAutoClaim() {
-            shareNumber++;
-            var shareCounter = document.getElementById('shareCounter');
-            if (shareCounter) {
-                shareCounter.textContent = 'Share #' + (shareNumber < 10 ? '0' : '') + shareNumber;
-            }
-            
-            var reward = '0.000003858';
-            var diffValue = '12000';
-            
-            addLog('success', 'SUCCESS', 'Auto claim Accepted Share #' + (shareNumber < 10 ? '0' : '') + shareNumber + ' (Diff: ' + diffValue + ') - Reward: ' + reward + ' BossX');
-        }
-
-        // Copy log entry
-        function copyLogEntry(logId) {
-            var log = null;
-            for (var i = 0; i < logs.length; i++) {
-                if (logs[i].id == logId) {
-                    log = logs[i];
-                    break;
-                }
-            }
-            
-            if (log) {
-                var logText = '[' + log.timestamp + '] [' + log.level + '] ' + log.message;
-                
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(logText).then(function() {
-                        showToast('Log Entry Disalin', 'Log entry berhasil disalin ke clipboard');
-                    });
+                document.getElementById('auto-claim-timer').textContent = autoClaimSeconds;
+                if (autoClaimSeconds <= 0) {
+                    performAutoClaim();
+                    autoClaimSeconds = 60; // Reset timer
                 } else {
-                    // Fallback for older browsers
-                    var textArea = document.createElement(\"textarea\");
-                    textArea.value = logText;
-                    document.body.appendChild(textArea);
-                    textArea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textArea);
-                    showToast('Log Entry Disalin', 'Log entry berhasil disalin ke clipboard');
+                    autoClaimSeconds--;
+                }
+            }
+            autoClaimInterval = setInterval(updateAutoClaimTimer, 1000);
+            updateAutoClaimTimer(); // Panggil segera agar timer langsung muncul
+        }
+        function stopAutoClaimCountdown() {
+            if (autoClaimInterval) {
+                clearInterval(autoClaimInterval);
+                autoClaimInterval = null;
+            }
+            document.getElementById('auto-claim-timer').textContent = '--';
+        }
+        function togglePower() {
+            if (!isNodeActive) {
+                showErrorMessage('Aktivasi node terlebih dahulu!');
+                return;
+            }
+            const powerBtn = document.getElementById('power-btn');
+            const statusText = document.getElementById('validation-status');
+            const countdownDisplay = document.getElementById('countdown-display');
+            const powerStatus = document.getElementById('power-status');
+            isValidationRunning = !isValidationRunning;
+            if (isValidationRunning) {
+                // Turn ON
+                powerBtn.classList.remove('off');
+                powerBtn.classList.add('on');
+                statusText.textContent = 'Stop validasi setiap jam 06.00';
+                countdownDisplay.style.display = 'block';
+                powerStatus.style.display = 'block';
+                powerStatus.style.color = '#10b981';
+                startCountdown();
+                startValidationRunning(); // Mulai akumulasi reward
+                startAutoClaimCountdown(); // Mulai hitung mundur auto-claim
+                // Add log entries for power on
+                appendLog(`${getTimestamp()} [INFO] Power On aktiv`);
+                appendLog(`${getTimestamp()} [STATUS] Connected successfully to masternode Validasi Running`);
+                showSuccessMessage('Validasi dimulai! Auto-claim aktif setiap 60 detik.');
+            } else {
+                // Turn OFF (manual, meski seharusnya tidak bisa)
+                powerBtn.classList.remove('on');
+                powerBtn.classList.add('off');
+                statusText.textContent = 'Belum berjalan';
+                countdownDisplay.style.display = 'none';
+                powerStatus.style.display = 'none';
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                }
+                stopValidationRunning();
+                stopAutoClaimCountdown();
+                showSuccessMessage('Validasi dihentikan manual.');
+            }
+            lucide.createIcons();
+        }
+        function forceStopValidation() {
+            if (!isValidationRunning) return;
+            isValidationRunning = false;
+            const powerBtn = document.getElementById('power-btn');
+            const statusText = document.getElementById('validation-status');
+            const countdownDisplay = document.getElementById('countdown-display');
+            const powerStatus = document.getElementById('power-status');
+            powerBtn.classList.remove('on');
+            powerBtn.classList.add('off');
+            statusText.textContent = 'Belum berjalan';
+            countdownDisplay.style.display = 'none';
+            powerStatus.style.display = 'none';
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+            stopValidationRunning();
+            stopAutoClaimCountdown();
+            showSuccessMessage('Validasi dihentikan otomatis pada jam 06:00. Silakan aktifkan kembali untuk melanjutkan.');
+            lucide.createIcons();
+        }
+        function startCountdown() {
+            function updateCountdown() {
+                const now = new Date();
+                const target = new Date();
+                target.setHours(6, 0, 0, 0);
+                if (now >= target) {
+                    target.setDate(target.getDate() + 1);
+                }
+                const diff = target.getTime() - now.getTime();
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                document.getElementById('countdown-time').textContent = timeString;
+            }
+            updateCountdown();
+            countdownInterval = setInterval(updateCountdown, 1000);
+        }
+        function checkSixAMStop() {
+            const now = new Date();
+            if (now.getHours() === 6 && now.getMinutes() === 0 && now.getSeconds() === 0) {
+                if (isValidationRunning) {
+                    forceStopValidation();
                 }
             }
         }
-
-        // Copy all logs
-        function copyAllLogs() {
-            var filteredLogs = getFilteredLogs();
-            var logTexts = [];
-            
-            for (var i = 0; i < filteredLogs.length; i++) {
-                var log = filteredLogs[i];
-                logTexts.push('[' + log.timestamp + '] [' + log.level + '] ' + log.message);
+        // =============================
+        // DEPOSIT & WITHDRAWAL FUNCTIONS
+        // =============================
+        function updateDepositContent() {
+            const wallet = walletAddresses[activeTab];
+            // Update QR code and labels
+            document.getElementById('qr-currency').textContent = activeTab;
+            document.getElementById('wallet-currency').textContent = activeTab;
+            document.getElementById('history-currency').textContent = activeTab;
+            document.getElementById('qr-code-image').src = wallet.qrCode;
+            document.getElementById('wallet-address').textContent = wallet.address;
+            document.getElementById('warning-currency').textContent = `• Hanya kirim ${activeTab} ke alamat ini`;
+            document.getElementById('min-deposit').textContent = `• Minimal deposit: ${activeTab === 'USDT' ? '10 USDT' : '1 BOSSX'}`;
+            document.getElementById('amount-currency').textContent = activeTab;
+            // Update tab appearance
+            const usdtTab = document.getElementById('usdt-tab');
+            const bossxTab = document.getElementById('bossx-tab');
+            if (activeTab === 'USDT') {
+                usdtTab.className = 'tab-button active relative px-8 py-3 rounded-xl font-semibold transition-all duration-300 bg-gradient-to-r from-amber-500 to-orange-500 text-black';
+                bossxTab.className = 'tab-button relative px-8 py-3 rounded-xl font-semibold transition-all duration-300 bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white';
+            } else {
+                bossxTab.className = 'tab-button active relative px-8 py-3 rounded-xl font-semibold transition-all duration-300 bg-gradient-to-r from-amber-500 to-orange-500 text-black';
+                usdtTab.className = 'tab-button relative px-8 py-3 rounded-xl font-semibold transition-all duration-300 bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white';
             }
-            
-            var logText = logTexts.join('
-');
-            
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(logText).then(function() {
-                    showToast('Log Berhasil Disalin', filteredLogs.length + ' log entries telah disalin ke clipboard');
+            // Update history
+            updateDepositHistory();
+            updateDepositStatistics();
+        }
+        function updateDepositHistory() {
+            const history = depositHistory[activeTab] || [];
+            const historyContent = document.getElementById('history-content');
+            if (history.length === 0) {
+                historyContent.innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="calendar" class="text-gray-400 w-6 h-6"></i>
+                        </div>
+                        <h4 class="text-gray-400 text-lg font-semibold mb-2">Belum ada history deposit</h4>
+                        <p class="text-gray-500">History deposit ${activeTab} Anda akan muncul di sini</p>
+                    </div>
+                `;
+            } else {
+                let tableHTML = `
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b border-gray-700">
+                                    <th class="text-left p-3 text-gray-400 font-semibold">Tanggal</th>
+                                    <th class="text-left p-3 text-gray-400 font-semibold">Jumlah</th>
+                                    <th class="text-left p-3 text-gray-400 font-semibold">TX Hash</th>
+                                    <th class="text-left p-3 text-gray-400 font-semibold">Status</th>
+                                    <th class="text-left p-3 text-gray-400 font-semibold">Konfirmasi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                history.forEach(deposit => {
+                    const statusIcon = getStatusIcon(deposit.status);
+                    const statusColor = getStatusColor(deposit.status);
+                    const statusText = getStatusText(deposit.status);
+                    tableHTML += `
+                        <tr class="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors">
+                            <td class="p-3">
+                                <div class="flex items-center text-white">
+                                    <i data-lucide="clock" class="mr-2 text-gray-400 w-4 h-4"></i>
+                                    ${formatDate(deposit.timestamp)}
+                                </div>
+                            </td>
+                            <td class="p-3">
+                                <div class="font-semibold text-amber-400">
+                                    ${formatAmount(deposit.amount)} ${activeTab}
+                                </div>
+                            </td>
+                            <td class="p-3">
+                                <div class="font-mono text-sm text-gray-300 max-w-32 truncate">
+                                    ${deposit.txHash}
+                                </div>
+                            </td>
+                            <td class="p-3">
+                                <div class="flex items-center ${statusColor}">
+                                    ${statusIcon}
+                                    <span class="ml-2 capitalize font-semibold">
+                                        ${statusText}
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="p-3">
+                                <div class="text-gray-300">
+                                    ${deposit.confirmationCount}/1
+                                </div>
+                            </td>
+                        </tr>
+                    `;
                 });
+                tableHTML += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                historyContent.innerHTML = tableHTML;
+            }
+            // Re-initialize Lucide icons
+            lucide.createIcons();
+        }
+        function updateDepositStatistics() {
+            const history = depositHistory[activeTab] || [];
+            const confirmedDeposits = history.filter(d => d.status === 'confirmed');
+            const pendingDeposits = history.filter(d => d.status === 'pending');
+            const totalAmount = confirmedDeposits.reduce((sum, d) => sum + d.amount, 0);
+            document.getElementById('total-deposits').textContent = confirmedDeposits.length;
+            document.getElementById('total-amount').textContent = formatAmount(totalAmount);
+            document.getElementById('pending-deposits').textContent = pendingDeposits.length;
+        }
+        function updateWithdrawalContent() {
+            // Update balance display
+            const balance = activeWithdrawalTab === 'USDT' ? usdtBalance : bossxBalance;
+            document.getElementById('withdrawal-balance').textContent = `${formatAmount(balance)} ${activeWithdrawalTab}`;
+            // Update currency labels
+            document.getElementById('withdrawal-currency').textContent = activeWithdrawalTab;
+            document.getElementById('withdrawal-history-currency').textContent = activeWithdrawalTab;
+            document.getElementById('withdrawal-amount-currency').textContent = activeWithdrawalTab;
+            // Update network options
+            const networkSelection = document.getElementById('network-selection');
+            if (activeWithdrawalTab === 'USDT') {
+                networkSelection.style.display = 'block';
+                networkSelection.innerHTML = `
+                    <label class="text-sm text-gray-400">Pilih Network:</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="network-option selected">
+                            <input type="radio" name="withdrawal-network" value="TRC20" checked>
+                            <div class="flex items-center justify-between">
+                                <span class="font-semibold text-white">TRC20</span>
+                                <span class="text-xs text-gray-400">TRON</span>
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">Fee: 1 USDT</div>
+                        </label>
+                        <label class="network-option">
+                            <input type="radio" name="withdrawal-network" value="BEP20">
+                            <div class="flex items-center justify-between">
+                                <span class="font-semibold text-white">BEP20</span>
+                                <span class="text-xs text-gray-400">BSC</span>
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">Fee: 1 USDT</div>
+                        </label>
+                    </div>
+                `;
+                document.getElementById('withdrawal-min').textContent = '• Minimal withdrawal: 10 USDT';
+                document.getElementById('withdrawal-fee').textContent = '• Fee withdrawal: 1 USDT';
+            } else {
+                networkSelection.style.display = 'block';
+                networkSelection.innerHTML = `
+                    <label class="text-sm text-gray-400">Network:</label>
+                    <div class="grid grid-cols-1 gap-3">
+                        <label class="network-option selected">
+                            <input type="radio" name="withdrawal-network" value="TRC20" checked>
+                            <div class="flex items-center justify-between">
+                                <span class="font-semibold text-white">TRC20</span>
+                                <span class="text-xs text-gray-400">TRON</span>
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">Fee: 0.1 BOSSX</div>
+                        </label>
+                    </div>
+                `;
+                document.getElementById('withdrawal-min').textContent = '• Minimal withdrawal: 1 BOSSX';
+                document.getElementById('withdrawal-fee').textContent = '• Fee withdrawal: 0.1 BOSSX';
+            }
+            // Update tab appearance
+            const usdtTab = document.getElementById('withdrawal-usdt-tab');
+            const bossxTab = document.getElementById('withdrawal-bossx-tab');
+            if (activeWithdrawalTab === 'USDT') {
+                usdtTab.className = 'tab-button active relative px-8 py-3 rounded-xl font-semibold transition-all duration-300 bg-gradient-to-r from-red-500 to-red-600 text-white';
+                bossxTab.className = 'tab-button relative px-8 py-3 rounded-xl font-semibold transition-all duration-300 bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white';
+            } else {
+                bossxTab.className = 'tab-button active relative px-8 py-3 rounded-xl font-semibold transition-all duration-300 bg-gradient-to-r from-red-500 to-red-600 text-white';
+                usdtTab.className = 'tab-button relative px-8 py-3 rounded-xl font-semibold transition-all duration-300 bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white';
+            }
+            // Update network selection event listeners
+            setupNetworkSelection();
+            // Update withdrawal summary
+            updateWithdrawalSummary();
+            // Update withdrawal history
+            updateWithdrawalHistory();
+            updateWithdrawalStatistics();
+        }
+        function setupNetworkSelection() {
+            document.querySelectorAll('.network-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove selected class from all options
+                    document.querySelectorAll('.network-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    // Check the radio button
+                    const radio = this.querySelector('input[type="radio"]');
+                    radio.checked = true;
+                    // Update summary
+                    updateWithdrawalSummary();
+                });
+            });
+        }
+        function updateWithdrawalSummary() {
+            const amount = parseFloat(document.getElementById('withdrawal-amount').value) || 0;
+            const selectedNetwork = document.querySelector('input[name="withdrawal-network"]:checked')?.value || 'TRC20';
+            const config = withdrawalConfig[activeWithdrawalTab].networks[selectedNetwork];
+            const fee = config.fee;
+            const received = Math.max(0, amount - fee);
+            document.getElementById('summary-network').textContent = selectedNetwork;
+            document.getElementById('summary-amount').textContent = `${formatAmount(amount)} ${activeWithdrawalTab}`;
+            document.getElementById('summary-fee').textContent = `${formatAmount(fee)} ${activeWithdrawalTab}`;
+            document.getElementById('summary-received').textContent = `${formatAmount(received)} ${activeWithdrawalTab}`;
+        }
+        function setMaxWithdrawal() {
+            const balance = activeWithdrawalTab === 'USDT' ? usdtBalance : bossxBalance;
+            const selectedNetwork = document.querySelector('input[name="withdrawal-network"]:checked')?.value || 'TRC20';
+            const config = withdrawalConfig[activeWithdrawalTab].networks[selectedNetwork];
+            const fee = config.fee;
+            // Set max amount (balance minus fee, but not less than 0)
+            const maxAmount = Math.max(0, balance - fee);
+            document.getElementById('withdrawal-amount').value = maxAmount.toFixed(activeWithdrawalTab === 'USDT' ? 2 : 8);
+            updateWithdrawalSummary();
+        }
+        function submitWithdrawal() {
+            const address = document.getElementById('withdrawal-address').value.trim();
+            const amount = parseFloat(document.getElementById('withdrawal-amount').value) || 0;
+            const selectedNetwork = document.querySelector('input[name="withdrawal-network"]:checked')?.value || 'TRC20';
+            const config = withdrawalConfig[activeWithdrawalTab].networks[selectedNetwork];
+            const balance = activeWithdrawalTab === 'USDT' ? usdtBalance : bossxBalance;
+            const fee = config.fee;
+            const minAmount = config.min;
+            // Validations
+            if (!address) {
+                showErrorMessage('Alamat wallet tujuan tidak boleh kosong!');
+                return;
+            }
+            if (address.length < 30) {
+                showErrorMessage('Alamat wallet tidak valid!');
+                return;
+            }
+            if (amount < minAmount) {
+                showErrorMessage(`Minimal withdrawal adalah ${minAmount} ${activeWithdrawalTab}!`);
+                return;
+            }
+            if (amount > balance) {
+                showErrorMessage('Saldo tidak mencukupi!');
+                return;
+            }
+            if ((amount + fee) > balance) {
+                showErrorMessage(`Saldo tidak cukup untuk membayar fee ${fee} ${activeWithdrawalTab}!`);
+                return;
+            }
+            // Process withdrawal
+            const received = amount - fee;
+            // Deduct balance
+            if (activeWithdrawalTab === 'USDT') {
+                usdtBalance -= amount;
+            } else {
+                bossxBalance -= amount;
+            }
+            // Add to withdrawal history
+            const newWithdrawal = {
+                id: Date.now().toString(),
+                amount: amount,
+                fee: fee,
+                received: received,
+                address: address,
+                network: selectedNetwork,
+                status: 'processing',
+                timestamp: new Date(),
+                txHash: generateFakeTxHash()
+            };
+            if (!withdrawalHistory[activeWithdrawalTab]) {
+                withdrawalHistory[activeWithdrawalTab] = [];
+            }
+            withdrawalHistory[activeWithdrawalTab].unshift(newWithdrawal);
+            // Reset form
+            document.getElementById('withdrawal-address').value = '';
+            document.getElementById('withdrawal-amount').value = '';
+            // Update UI
+            updateBalanceDisplays();
+            updateWithdrawalContent();
+            showSuccessMessage(`Withdrawal ${amount} ${activeWithdrawalTab} berhasil disubmit! Proses akan memakan waktu 1-24 jam.`);
+        }
+        function generateFakeTxHash() {
+            const chars = '0123456789abcdef';
+            let result = '';
+            for (let i = 0; i < 64; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+        function updateWithdrawalHistory() {
+            const history = withdrawalHistory[activeWithdrawalTab] || [];
+            const historyContent = document.getElementById('withdrawal-history-content');
+            if (history.length === 0) {
+                historyContent.innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="calendar" class="text-gray-400 w-6 h-6"></i>
+                        </div>
+                        <h4 class="text-gray-400 text-lg font-semibold mb-2">Belum ada history withdrawal</h4>
+                        <p class="text-gray-500">History withdrawal ${activeWithdrawalTab} Anda akan muncul di sini</p>
+                    </div>
+                `;
+            } else {
+                let tableHTML = `
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b border-gray-700">
+                                    <th class="text-left p-3 text-gray-400 font-semibold">Tanggal</th>
+                                    <th class="text-left p-3 text-gray-400 font-semibold">Jumlah</th>
+                                    <th class="text-left p-3 text-gray-400 font-semibold">Network</th>
+                                    <th class="text-left p-3 text-gray-400 font-semibold">Alamat</th>
+                                    <th class="text-left p-3 text-gray-400 font-semibold">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                history.forEach(withdrawal => {
+                    const statusIcon = getWithdrawalStatusIcon(withdrawal.status);
+                    const statusColor = getWithdrawalStatusColor(withdrawal.status);
+                    const statusText = getWithdrawalStatusText(withdrawal.status);
+                    tableHTML += `
+                        <tr class="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors">
+                            <td class="p-3">
+                                <div class="flex items-center text-white">
+                                    <i data-lucide="clock" class="mr-2 text-gray-400 w-4 h-4"></i>
+                                    ${formatDate(withdrawal.timestamp)}
+                                </div>
+                            </td>
+                            <td class="p-3">
+                                <div class="font-semibold text-red-400">
+                                    ${formatAmount(withdrawal.amount)} ${activeWithdrawalTab}
+                                </div>
+                                <div class="text-xs text-gray-400">
+                                    Fee: ${formatAmount(withdrawal.fee)} ${activeWithdrawalTab}
+                                </div>
+                            </td>
+                            <td class="p-3">
+                                <div class="text-white font-mono text-sm">
+                                    ${withdrawal.network}
+                                </div>
+                            </td>
+                            <td class="p-3">
+                                <div class="font-mono text-sm text-gray-300 max-w-32 truncate">
+                                    ${withdrawal.address}
+                                </div>
+                            </td>
+                            <td class="p-3">
+                                <div class="flex items-center ${statusColor}">
+                                    ${statusIcon}
+                                    <span class="ml-2 capitalize font-semibold">
+                                        ${statusText}
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+                tableHTML += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                historyContent.innerHTML = tableHTML;
+            }
+            // Re-initialize Lucide icons
+            lucide.createIcons();
+        }
+        function updateWithdrawalStatistics() {
+            const history = withdrawalHistory[activeWithdrawalTab] || [];
+            const completedWithdrawals = history.filter(w => w.status === 'completed');
+            const processingWithdrawals = history.filter(w => w.status === 'processing');
+            const totalAmount = completedWithdrawals.reduce((sum, w) => sum + w.amount, 0);
+            document.getElementById('total-withdrawals').textContent = completedWithdrawals.length;
+            document.getElementById('total-withdrawal-amount').textContent = formatAmount(totalAmount);
+            document.getElementById('processing-withdrawals').textContent = processingWithdrawals.length;
+        }
+        function getStatusIcon(status) {
+            switch (status) {
+                case 'confirmed':
+                    return '<i data-lucide="check-circle" class="text-green-400 w-4 h-4"></i>';
+                case 'failed':
+                    return '<i data-lucide="x-circle" class="text-red-400 w-4 h-4"></i>';
+                default:
+                    return '<i data-lucide="loader" class="text-yellow-400 w-4 h-4 animate-spin"></i>';
             }
         }
-
-        // Export logs
-        function exportLogs() {
-            var filteredLogs = getFilteredLogs();
-            var logTexts = [];
-            
-            for (var i = 0; i < filteredLogs.length; i++) {
-                var log = filteredLogs[i];
-                logTexts.push('[' + log.timestamp + '] [' + log.level + '] ' + log.message);
+        function getStatusColor(status) {
+            switch (status) {
+                case 'confirmed':
+                    return 'text-green-400';
+                case 'failed':
+                    return 'text-red-400';
+                default:
+                    return 'text-yellow-400';
             }
-            
-            var logText = logTexts.join('
-');
-            var blob = new Blob([logText], { type: 'text/plain' });
-            var url = URL.createObjectURL(blob);
-            var a = document.createElement('a');
-            a.href = url;
-            a.download = 'bossx_mining_logs_' + new Date().toISOString().split('T')[0] + '.txt';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            showToast('Log Berhasil Diekspor', filteredLogs.length + ' log entries telah diekspor ke file');
         }
-
-        // Clear logs
-        function clearLogs() {
-            logs = [];
-            updateUI();
-            showToast('Log Dibersihkan', 'Semua log telah dihapus dari tampilan');
+        function getStatusText(status) {
+            switch (status) {
+                case 'confirmed':
+                    return 'Terkonfirmasi';
+                case 'failed':
+                    return 'Gagal';
+                default:
+                    return 'Pending';
+            }
         }
-
-        // Show toast notification
-        function showToast(title, message) {
-            var toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.innerHTML = '<div class=\"toast-title\">' + title + '</div><div class=\"toast-message\">' + message + '</div>';
-            
-            document.body.appendChild(toast);
-            
-            setTimeout(function() { 
-                toast.classList.add('show'); 
-            }, 100);
-            
-            setTimeout(function() {
-                toast.classList.remove('show');
-                setTimeout(function() { 
-                    if (document.body.contains(toast)) {
-                        document.body.removeChild(toast);
-                    }
-                }, 300);
-            }, 4000);
+        function getWithdrawalStatusIcon(status) {
+            switch (status) {
+                case 'completed':
+                    return '<i data-lucide="check-circle" class="text-green-400 w-4 h-4"></i>';
+                case 'failed':
+                    return '<i data-lucide="x-circle" class="text-red-400 w-4 h-4"></i>';
+                default:
+                    return '<i data-lucide="loader" class="text-yellow-400 w-4 h-4 animate-spin"></i>';
+            }
         }
-
-        // Handle filter change
-        function handleFilterChange(e) {
-            currentFilter = e.target.value;
-            updateUI();
+        function getWithdrawalStatusColor(status) {
+            switch (status) {
+                case 'completed':
+                    return 'text-green-400';
+                case 'failed':
+                    return 'text-red-400';
+                default:
+                    return 'text-yellow-400';
+            }
         }
-
-        // Initialize app
-        function init() {
-            // Event listeners
-            document.getElementById('activateButton').addEventListener('click', activateMasternode);
-            document.getElementById('powerButton').addEventListener('click', powerOn);
-            document.getElementById('copyButton').addEventListener('click', copyAllLogs);
-            document.getElementById('exportButton').addEventListener('click', exportLogs);
-            document.getElementById('clearButton').addEventListener('click', clearLogs);
-            document.getElementById('filterSelect').addEventListener('change', handleFilterChange);
-            document.getElementById('nodeInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    activateMasternode();
+        function getWithdrawalStatusText(status) {
+            switch (status) {
+                case 'completed':
+                    return 'Selesai';
+                case 'failed':
+                    return 'Gagal';
+                default:
+                    return 'Diproses';
+            }
+        }
+        function formatDate(date) {
+            return date.toLocaleString('id-ID', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        function formatAmount(amount) {
+            return new Intl.NumberFormat('id-ID', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 8
+            }).format(amount);
+        }
+        function copyToClipboard(text) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showSuccessMessage('Alamat berhasil disalin ke clipboard!');
+                }).catch(() => {
+                    fallbackCopy(text);
+                });
+            } else {
+                fallbackCopy(text);
+            }
+        }
+        function fallbackCopy(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showSuccessMessage('Alamat berhasil disalin ke clipboard!');
+            } catch (err) {
+                showSuccessMessage('Gagal menyalin alamat. Silakan copy manual.');
+            }
+            document.body.removeChild(textArea);
+        }
+        function downloadQRCode() {
+            const link = document.createElement('a');
+            link.download = `${activeTab}_QRCode.png`;
+            link.href = walletAddresses[activeTab].qrCode;
+            link.click();
+            showSuccessMessage(`QR Code ${activeTab} berhasil didownload!`);
+        }
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sidebar toggle
+            document.getElementById('toggle-sidebar').addEventListener('click', function() {
+                const sidebar = document.getElementById('sidebar');
+                const logoText = document.getElementById('logo-text');
+                const sidebarFooter = document.getElementById('sidebar-footer');
+                const menuTexts = document.querySelectorAll('.menu-text');
+                const toggleIcon = this.querySelector('[data-lucide]');
+                if (sidebar.classList.contains('collapsed')) {
+                    sidebar.classList.remove('collapsed');
+                    logoText.style.display = 'block';
+                    sidebarFooter.style.display = 'block';
+                    menuTexts.forEach(text => text.style.display = 'inline');
+                    toggleIcon.setAttribute('data-lucide', 'chevron-left');
+                } else {
+                    sidebar.classList.add('collapsed');
+                    logoText.style.display = 'none';
+                    sidebarFooter.style.display = 'none';
+                    menuTexts.forEach(text => text.style.display = 'none');
+                    toggleIcon.setAttribute('data-lucide', 'chevron-right');
+                }
+                lucide.createIcons();
+            });
+            // Menu navigation
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = this.getAttribute('data-page');
+                    if (page) showPage(page);
+                });
+            });
+            // Deposit tabs
+            document.getElementById('usdt-tab').addEventListener('click', function() {
+                activeTab = 'USDT';
+                updateDepositContent();
+            });
+            document.getElementById('bossx-tab').addEventListener('click', function() {
+                activeTab = 'BOSSX';
+                updateDepositContent();
+            });
+            // Withdrawal tabs
+            document.getElementById('withdrawal-usdt-tab').addEventListener('click', function() {
+                activeWithdrawalTab = 'USDT';
+                updateWithdrawalContent();
+            });
+            document.getElementById('withdrawal-bossx-tab').addEventListener('click', function() {
+                activeWithdrawalTab = 'BOSSX';
+                updateWithdrawalContent();
+            });
+            // Deposit functionality
+            document.getElementById('copy-address').addEventListener('click', function() {
+                const address = walletAddresses[activeTab].address;
+                copyToClipboard(address);
+            });
+            document.getElementById('download-qr').addEventListener('click', function() {
+                downloadQRCode();
+            });
+            document.getElementById('refresh-history').addEventListener('click', function() {
+                showSuccessMessage('History deposit berhasil diperbarui!');
+                updateDepositHistory();
+            });
+            // Withdrawal functionality
+            document.addEventListener('click', function(e) {
+                if (!e.target) return;
+                if (e.target.id === 'max-withdrawal') {
+                    setMaxWithdrawal();
+                }
+                if (e.target.id === 'refresh-withdrawal-history') {
+                    showSuccessMessage('History withdrawal berhasil diperbarui!');
+                    updateWithdrawalHistory();
                 }
             });
-            
-            updateUI();
-            
-            setTimeout(function() {
-                showToast('BossX Mining Engine Ready', 'Masukkan konfigurasi node dan mulai mining!');
+            document.addEventListener('input', function(e) {
+                if (!e.target) return;
+                if (e.target.id === 'withdrawal-amount') {
+                    updateWithdrawalSummary();
+                }
+            });
+        });
+        // Initialize
+        window.addEventListener('load', function() {
+            setInterval(updateClock, 1000);
+            setInterval(checkSixAMStop, 1000);
+            updateClock();
+            updateBalanceDisplays();
+            updateDepositContent();
+            updateWithdrawalContent();
+            lucide.createIcons();
+            setTimeout(() => {
+                showSuccessMessage('Selamat datang di BossX Crypto Exchange Platform!');
             }, 1000);
-        }
+        });
+        console.log('BossX Crypto Exchange Platform - Sistem Reward Per Detik berhasil dimuat!');
 
-        // Start app
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-        } else {
-            init();
+        // =============================
+        // CHAT ROOM INTEGRATION
+        // =============================
+        function initializeChatRoom() {
+            const { useState, useEffect, useRef, createElement: h } = React;
+
+            // Custom Icons as Components
+            const MessageCircleIcon = ({ size = 24, className = "" }) => (
+                h('svg', { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", className },
+                    h('path', { d: "m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z" })
+                )
+            );
+
+            const UsersIcon = ({ size = 24, className = "" }) => (
+                h('svg', { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", className },
+                    h('path', { d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" }),
+                    h('circle', { cx: "9", cy: "7", r: "4" }),
+                    h('path', { d: "m22 21-3.4-3.4M17 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" })
+                )
+            );
+
+            const SendIcon = ({ size = 24, className = "" }) => (
+                h('svg', { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", className },
+                    h('path', { d: "m22 2-7 20-4-9-9-4Z" }),
+                    h('path', { d: "M22 2 11 13" })
+                )
+            );
+
+            const ClockIcon = ({ size = 24, className = "" }) => (
+                h('svg', { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", className },
+                    h('circle', { cx: "12", cy: "12", r: "10" }),
+                    h('polyline', { points: "12,6 12,12 16,14" })
+                )
+            );
+
+            const ActivityIcon = ({ size = 24, className = "" }) => (
+                h('svg', { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", className },
+                    h('path', { d: "M22 12h-4l-3 9L9 3l-3 9H2" })
+                )
+            );
+
+            // Mock Data
+            const mockRooms = [
+                { id: '#validator', description: 'Diskusi Validator & Masternode' },
+                { id: '#trading', description: 'Tips & Strategi Trading' },
+                { id: '#support', description: 'Bantuan & Dukungan Teknis' },
+                { id: '#founder', description: 'Diskusi dengan Founder' }
+            ];
+
+            const mockUsers = [
+                { id: 1, name: 'Admin', status: 'online' },
+                { id: 2, name: 'Founder', status: 'online' },
+                { id: 3, name: 'Moderator', status: 'online' },
+                { id: 4, name: 'User123', status: 'online' },
+                { id: 5, name: 'Trader Pro', status: 'away' },
+                { id: 6, name: 'Validator01', status: 'online' },
+                { id: 7, name: 'CryptoKing', status: 'online' },
+                { id: 8, name: 'BlockchainDev', status: 'online' }
+            ];
+
+            const mockMessages = [
+                {
+                    id: 1,
+                    sender: 'BossX Bot',
+                    content: '👋 Selamat datang di Chat Room BossX!\nDiskusi tentang validator & masternode dimulai di sini.',
+                    timestamp: '10:00',
+                    room: '#validator',
+                    isUser: false
+                },
+                {
+                    id: 2,
+                    sender: 'Admin',
+                    content: 'Halo semua! Ada yang punya pertanyaan tentang setup validator baru?',
+                    timestamp: '10:05',
+                    room: '#validator',
+                    isUser: false
+                },
+                {
+                    id: 3,
+                    sender: 'Validator01',
+                    content: 'Saya mengalami masalah sinkronisasi node. Ada saran?',
+                    timestamp: '10:15',
+                    room: '#validator',
+                    isUser: false
+                },
+                {
+                    id: 4,
+                    sender: 'Founder',
+                    content: 'Untuk masalah sinkronisasi, coba restart node dan pastikan koneksi internet stabil.',
+                    timestamp: '10:18',
+                    room: '#validator',
+                    isUser: false
+                },
+                {
+                    id: 5,
+                    sender: 'Trader Pro',
+                    content: 'Market sedang bullish hari ini. Saatnya ambil posisi long?',
+                    timestamp: '09:30',
+                    room: '#trading',
+                    isUser: false
+                },
+                {
+                    id: 6,
+                    sender: 'CryptoKing',
+                    content: 'Hati-hati dengan FOMO. Selalu gunakan stop loss!',
+                    timestamp: '09:45',
+                    room: '#trading',
+                    isUser: false
+                },
+                {
+                    id: 7,
+                    sender: 'User123',
+                    content: 'Bagaimana cara withdraw dari platform ini?',
+                    timestamp: '11:00',
+                    room: '#support',
+                    isUser: false
+                },
+                {
+                    id: 8,
+                    sender: 'Moderator',
+                    content: 'Untuk withdraw, masuk ke menu wallet dan pilih withdraw. Pastikan alamat benar!',
+                    timestamp: '11:05',
+                    room: '#support',
+                    isUser: false
+                },
+                {
+                    id: 9,
+                    sender: 'Founder',
+                    content: 'Selamat datang di ruang diskusi khusus. Apa yang ingin Anda tanyakan?',
+                    timestamp: '14:00',
+                    room: '#founder',
+                    isUser: false
+                }
+            ];
+
+            // Dashboard Component
+            const Dashboard = ({ onNavigate }) => {
+                const menuCards = [
+                    {
+                        id: 1,
+                        title: 'Chat Room',
+                        description: 'Diskusi dengan komunitas dan founder',
+                        icon: MessageCircleIcon,
+                        color: 'from-amber-500 to-orange-600',
+                        bgColor: 'bg-amber-500/10',
+                        borderColor: 'border-amber-500/20',
+                        textColor: 'text-amber-500',
+                        route: 'chat-room',
+                        stats: '15 Online'
+                    }
+                ];
+
+                return (
+                    h('div', { className: "min-h-screen bg-black text-white p-6" },
+                        h('div', { className: "max-w-7xl mx-auto" },
+                            // Header
+                            h('div', { className: "mb-8" },
+                                h('h1', { className: "text-4xl font-bold text-white mb-2" }, "Dashboard BossX")
+                            ),
+
+                            // Menu Cards Grid
+                            h('div', { className: "grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-6" },
+                                menuCards.map((card) => {
+                                    const IconComponent = card.icon;
+                                    return (
+                                        h('div', 
+                                            { 
+                                                key: card.id,
+                                                className: `relative group cursor-pointer transition-all duration-500 card-hover ${card.bgColor} ${card.borderColor} border-2 backdrop-blur-sm overflow-hidden rounded-lg hover-glow`,
+                                                onClick: () => onNavigate(card.route)
+                                            },
+                                            h('div', { className: "relative bg-gray-900/95 rounded-lg p-6" },
+                                                h('div', { className: "flex items-center justify-between mb-4" },
+                                                    h('div', { className: `p-3 rounded-xl ${card.bgColor} border ${card.borderColor}` },
+                                                        h(IconComponent, { size: 32, className: card.textColor })
+                                                    ),
+                                                    h('span', { className: `${card.bgColor} ${card.borderColor} ${card.textColor} font-bold px-3 py-1 rounded-full border text-sm` },
+                                                        card.stats
+                                                    )
+                                                ),
+                                                
+                                                h('h3', { className: `text-xl font-bold ${card.textColor} mb-2 group-hover:text-white transition-colors duration-300` },
+                                                    card.title
+                                                ),
+                                                h('p', { className: "text-gray-400 text-sm leading-relaxed group-hover:text-gray-300 transition-colors duration-300" },
+                                                    card.description
+                                                ),
+                                                
+                                                // Hover Effect Gradient
+                                                h('div', { className: `absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${card.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500` })
+                                            )
+                                        )
+                                    );
+                                })
+                            ),
+
+                            // Quick Stats
+                            h('div', { className: "grid grid-cols-1 md:grid-cols-2 gap-6 mt-8" },
+                                h('div', { className: "bg-gray-900/50 border border-gray-700 backdrop-blur-sm rounded-lg p-6" },
+                                    h('div', { className: "flex items-center gap-4" },
+                                        h('div', { className: "p-3 bg-blue-500/10 border border-blue-500/20 rounded-xl" },
+                                            h(ActivityIcon, { size: 24, className: "text-blue-500" })
+                                        ),
+                                        h('div', null,
+                                            h('p', { className: "text-gray-400 text-sm" }, "Active Validators"),
+                                            h('p', { className: "text-2xl font-bold text-white" }, "8")
+                                        )
+                                    )
+                                ),
+                                
+                                h('div', { className: "bg-gray-900/50 border border-gray-700 backdrop-blur-sm rounded-lg p-6" },
+                                    h('div', { className: "flex items-center gap-4" },
+                                        h('div', { className: "p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl" },
+                                            h(UsersIcon, { size: 24, className: "text-amber-500" })
+                                        ),
+                                        h('div', null,
+                                            h('p', { className: "text-gray-400 text-sm" }, "Community Members"),
+                                            h('p', { className: "text-2xl font-bold text-white" }, "1,247")
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                );
+            };
+
+            // ChatRoom Component
+            const ChatRoom = ({ onNavigate }) => {
+                const [messages, setMessages] = useState(mockMessages);
+                const [currentRoom, setCurrentRoom] = useState('#validator');
+                const [messageInput, setMessageInput] = useState('');
+                const [onlineCount, setOnlineCount] = useState(15);
+                const messagesEndRef = useRef(null);
+
+                const scrollToBottom = () => {
+                    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+                };
+
+                useEffect(() => {
+                    scrollToBottom();
+                }, [messages]);
+
+                const handleSendMessage = () => {
+                    if (!messageInput.trim()) return;
+
+                    const newMessage = {
+                        id: Date.now(),
+                        sender: 'User',
+                        content: messageInput.trim(),
+                        timestamp: new Date().toLocaleTimeString('id-ID', { 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                        }),
+                        room: currentRoom,
+                        isUser: true
+                    };
+
+                    setMessages(prev => [...prev, newMessage]);
+                    setMessageInput('');
+                };
+
+                const handleKeyPress = (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSendMessage();
+                    }
+                };
+
+                const getAvatarLetter = (name) => {
+                    return name.charAt(0).toUpperCase();
+                };
+
+                const currentRoomMessages = messages.filter(msg => msg.room === currentRoom);
+
+                return (
+                    h('div', { className: "min-h-screen bg-black text-white p-4 flex items-center justify-center" },
+                        h('div', { className: "w-full max-w-7xl" },
+                            // Back Button
+                            h('button', 
+                                { 
+                                    onClick: () => onNavigate('dashboard'),
+                                    className: "mb-4 text-amber-500 hover:text-amber-400 flex items-center gap-2 text-lg font-medium"
+                                },
+                                "← Kembali ke Dashboard"
+                            ),
+
+                            // Chat Room Card dengan Glowing Border
+                            h('div', { className: "relative bg-gray-900/90 border border-gray-700 backdrop-blur-sm h-[800px] overflow-hidden rounded-3xl glowing-border" },
+                                h('div', { className: "relative bg-gray-900/95 rounded-3xl h-full" },
+                                    // Header
+                                    h('div', { className: "bg-black/50 border-b border-gray-700 p-6" },
+                                        h('div', { className: "flex justify-between items-center" },
+                                            h('div', { className: "flex items-center gap-4" },
+                                                h(MessageCircleIcon, { size: 32, className: "text-amber-500" }),
+                                                h('h1', { className: "text-2xl font-bold text-amber-500" }, "Chat Room BossX")
+                                            ),
+                                            h('div', { className: "bg-green-500/10 border border-green-500/30 text-green-400 px-4 py-2 text-lg font-bold rounded-full flex items-center gap-2" },
+                                                h(UsersIcon, { size: 16 }),
+                                                onlineCount + " Online"
+                                            )
+                                        )
+                                    ),
+
+                                    h('div', { className: "flex h-[calc(100%-85px)]" },
+                                        // Sidebar
+                                        h('div', { className: "w-80 bg-gray-950/80 border-r border-gray-700 p-6" },
+                                            h('div', { className: "mb-6" },
+                                                h('h3', { className: "text-xl font-bold text-amber-500 mb-4 flex items-center gap-2" },
+                                                    h(MessageCircleIcon, { size: 20 }),
+                                                    "Chat Rooms"
+                                                ),
+                                                h('div', { className: "space-y-4" },
+                                                    mockRooms.map((room) => (
+                                                        h('div',
+                                                            {
+                                                                key: room.id,
+                                                                onClick: () => setCurrentRoom(room.id),
+                                                                className: `p-5 rounded-2xl cursor-pointer transition-all duration-300 border menu-item ${currentRoom === room.id ? 'active' : ''}`,
+                                                                style: {
+                                                                    backgroundColor: currentRoom === room.id ? 'rgba(245, 158, 11, 0.1)' : 'rgba(255,255,255,0.05)',
+                                                                    borderColor: currentRoom === room.id ? '#f59e0b' : 'rgb(75, 85, 99)'
+                                                                }
+                                                            },
+                                                            h('div', { className: "font-bold text-lg text-amber-500" }, room.id),
+                                                            h('div', { className: "text-sm text-gray-400 mt-1" }, room.description)
+                                                        )
+                                                    ))
+                                                )
+                                            ),
+
+                                            h('div', { className: "bg-green-500/5 border border-green-500/20 rounded-2xl p-6" },
+                                                h('h3', { className: "text-lg font-bold text-green-400 mb-3 flex items-center gap-2" },
+                                                    h(UsersIcon, { size: 20 }),
+                                                    "Online (" + mockUsers.length + ")"
+                                                ),
+                                                h('p', { className: "text-gray-300" }, "Bergabunglah dengan komunitas aktif BossX")
+                                            )
+                                        ),
+
+                                        // Main Chat Area
+                                        h('div', { className: "flex-1 flex flex-col bg-gray-950/50" },
+                                            // Channel Header
+                                            h('div', { className: "flex justify-between items-center p-6 border-b-2 border-gray-700" },
+                                                h('div', { className: "flex items-center gap-4" },
+                                                    h('span', { className: "text-2xl font-bold text-amber-500" }, currentRoom),
+                                                    h('span', { className: "bg-amber-500/10 border border-amber-500/30 text-amber-500 px-4 py-2 rounded-full" },
+                                                        (mockRooms.find(r => r.id === currentRoom)?.description || 'Chat Room')
+                                                    )
+                                                ),
+                                                h('div', { className: "flex items-center gap-2 text-green-400 font-bold" },
+                                                    h('div', { className: "w-3 h-3 bg-green-400 rounded-full shadow-lg shadow-green-400/50 live-indicator" }),
+                                                    "Live"
+                                                )
+                                            ),
+
+                                            // Messages
+                                            h('div', { className: "flex-1 p-6 overflow-y-auto custom-scroll" },
+                                                h('div', { className: "space-y-4" },
+                                                    currentRoomMessages.length > 0 ? currentRoomMessages.map((message, index) => (
+                                                        h('div', 
+                                                            { 
+                                                                key: message.id, 
+                                                                className: "flex gap-4 message-animate",
+                                                                style: { animationDelay: `${index * 80}ms` }
+                                                            },
+                                                            h('div', { className: "flex flex-col items-center gap-1" },
+                                                                h('div', { 
+                                                                    className: `w-10 h-10 rounded-full flex items-center justify-center font-bold text-white ${
+                                                                        message.isUser ? 'bg-gradient-to-br from-blue-500 to-purple-600' : 'bg-gradient-to-br from-amber-500 to-orange-600'
+                                                                    }`
+                                                                }, getAvatarLetter(message.sender)),
+                                                                h('span', { className: "text-xs text-gray-400 max-w-[60px] truncate" }, message.sender)
+                                                            ),
+                                                            h('div', { className: "flex-1" },
+                                                                h('div', { className: "flex justify-between items-center mb-2" },
+                                                                    h('span', { className: "font-bold text-amber-500" }, message.sender),
+                                                                    h('span', { className: "text-xs text-gray-500 flex items-center gap-1" },
+                                                                        h(ClockIcon, { size: 12 }),
+                                                                        message.timestamp
+                                                                    )
+                                                                ),
+                                                                h('div', { className: "bg-white/5 backdrop-blur-sm rounded-2xl rounded-tl-sm p-4 max-w-[85%] border border-gray-700/50" },
+                                                                    h('p', { className: "text-white leading-relaxed whitespace-pre-wrap" }, message.content)
+                                                                )
+                                                            )
+                                                        )
+                                                    )) : (
+                                                        h('div', { className: "text-center text-gray-500 py-8" },
+                                                            h(MessageCircleIcon, { size: 48, className: "mx-auto mb-4 opacity-50" }),
+                                                            h('p', null, "Belum ada pesan di room ini. Mulai percakapan!")
+                                                        )
+                                                    ),
+                                                    h('div', { ref: messagesEndRef })
+                                                )
+                                            ),
+
+                                            // Input Area
+                                            h('div', { className: "p-6 border-t-2 border-gray-700 bg-gray-950/50" },
+                                                h('div', { className: "text-right text-sm text-gray-500 font-bold mb-2" },
+                                                    messageInput.length + "/500"
+                                                ),
+                                                h('div', { className: "flex gap-4" },
+                                                    h('textarea', {
+                                                        value: messageInput,
+                                                        onChange: (e) => setMessageInput(e.target.value),
+                                                        onKeyPress: handleKeyPress,
+                                                        placeholder: "Tulis pesan...",
+                                                        maxLength: 500,
+                                                        className: "flex-1 bg-gray-800 border border-gray-600 text-white placeholder:text-gray-400 rounded-2xl resize-none min-h-[60px] p-4 focus:border-amber-500 focus:bg-gray-700 focus:outline-none"
+                                                    }),
+                                                    h('button', {
+                                                        onClick: handleSendMessage,
+                                                        className: "bg-gradient-to-r from-amber-500 to-blue-500 hover:from-amber-600 hover:to-blue-600 text-white font-bold px-8 py-4 rounded-2xl min-w-[140px] transition-all duration-300 flex items-center gap-2"
+                                                    },
+                                                        h(SendIcon, { size: 20 }),
+                                                        "Kirim"
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                );
+            };
+
+            // Main App Component
+            const App = () => {
+                const [currentPage, setCurrentPage] = useState('chat-room');
+
+                const navigate = (page) => {
+                    setCurrentPage(page);
+                    if (page === 'dashboard') {
+                        showPage('dashboard'); // Navigate back to main dashboard
+                    }
+                };
+
+                switch(currentPage) {
+                    case 'dashboard':
+                        return h(Dashboard, { onNavigate: navigate });
+                    case 'chat-room':
+                        return h(ChatRoom, { onNavigate: navigate });
+                    default:
+                        return h(ChatRoom, { onNavigate: navigate });
+                }
+            };
+
+            // Render the app
+            ReactDOM.render(h(App), document.getElementById('chat-room-container'));
         }
     </script>
 </body>
