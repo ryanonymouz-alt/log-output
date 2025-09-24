@@ -4,23 +4,21 @@
     <meta charset=\"UTF-8\">
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
     <title>Log Engine Masternode - BossX Mining Edition</title>
-    <script src=\"https://cdn.tailwindcss.com\"></script>
     <style>
-        /* Clean Fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap');
-        
+        /* Reset dan Base Styles */
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
         
         body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             overflow-x: hidden;
+            line-height: 1.6;
         }
         
-        /* Static Background - NO ANIMATION */
+        /* Background */
         .clean-bg {
             background: linear-gradient(135deg, #0f1419 0%, #1a202c 25%, #2d3748 50%, #1a202c 75%, #0f1419 100%);
             min-height: 100vh;
@@ -41,7 +39,14 @@
             pointer-events: none;
         }
         
-        /* Static Gradient Text - NO ANIMATION */
+        /* Container */
+        .container {
+            max-width: 80rem;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+        
+        /* Gradient Text */
         .clean-text {
             background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
             -webkit-background-clip: text;
@@ -51,7 +56,7 @@
             font-weight: 800;
         }
         
-        /* Static Cards - NO BORDER ANIMATION */
+        /* Cards */
         .clean-card {
             background: rgba(30, 41, 59, 0.85);
             backdrop-filter: blur(20px);
@@ -77,7 +82,7 @@
             border-color: rgba(99, 102, 241, 0.4);
         }
         
-        /* Static Stat Cards - NO ANIMATION */
+        /* Stat Cards */
         .stat-card {
             background: rgba(30, 41, 59, 0.7);
             backdrop-filter: blur(15px);
@@ -119,12 +124,12 @@
             border-color: rgba(99, 102, 241, 0.5);
         }
         
-        /* Static Number Display - SMOOTH TRANSITION ONLY */
+        /* Stat Number */
         .stat-number {
             font-size: 2rem;
             font-weight: 700;
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Courier New', Consolas, monospace;
             position: relative;
             z-index: 1;
         }
@@ -133,7 +138,7 @@
             transform: scale(1.08);
         }
         
-        /* Static Buttons - NO SHIMMER ANIMATION */
+        /* Buttons */
         .clean-btn {
             padding: 12px 24px;
             border-radius: 10px;
@@ -145,28 +150,9 @@
             overflow: hidden;
             transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             backdrop-filter: blur(10px);
-        }
-        
-        .btn-danger {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.25);
-        }
-        
-        .btn-danger:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.35);
-        }
-        
-        .btn-success {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
-        }
-        
-        .btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.35);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .btn-primary {
@@ -178,6 +164,17 @@
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(59, 130, 246, 0.35);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.35);
         }
         
         .btn-outline {
@@ -204,7 +201,11 @@
             box-shadow: none;
         }
         
-        /* Input Styling */
+        .w-full {
+            width: 100%;
+        }
+        
+        /* Input */
         .clean-input {
             background: rgba(30, 41, 59, 0.8);
             border: 1px solid rgba(71, 85, 105, 0.4);
@@ -212,7 +213,7 @@
             padding: 12px 16px;
             color: white;
             font-size: 14px;
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Courier New', Consolas, monospace;
             backdrop-filter: blur(10px);
             transition: all 0.3s ease;
             width: 100%;
@@ -228,7 +229,25 @@
             color: #94a3b8;
         }
         
-        /* Static Badge - NO ANIMATION */
+        /* Select */
+        .clean-select {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(71, 85, 105, 0.4);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: white;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .clean-select:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+        }
+        
+        /* Badges */
         .clean-badge {
             padding: 6px 14px;
             border-radius: 20px;
@@ -236,6 +255,8 @@
             font-weight: 600;
             backdrop-filter: blur(10px);
             transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
         }
         
         .badge-success {
@@ -248,13 +269,6 @@
             color: #cbd5e1;
         }
         
-        .badge-clean {
-            background: linear-gradient(135deg, #8b5cf6, #6366f1);
-            color: white;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
         .badge-bossx {
             background: linear-gradient(135deg, #f59e0b, #d97706);
             color: white;
@@ -262,7 +276,7 @@
             letter-spacing: 0.5px;
         }
         
-        /* Log Container - Static */
+        /* Log Container */
         .log-container {
             background: rgba(15, 23, 42, 0.9);
             backdrop-filter: blur(25px);
@@ -272,20 +286,13 @@
             position: relative;
         }
         
-        /* Log Container Height */
         .log-display-container {
             height: 850px;
             overflow-y: auto;
             padding-right: 4px;
         }
         
-        @media (max-width: 768px) {
-            .log-display-container {
-                height: 600px;
-            }
-        }
-        
-        /* Static Log Entries - NO BLINKING ANIMATIONS */
+        /* Log Entries */
         .clean-log-entry {
             padding: 16px 20px;
             margin-bottom: 8px;
@@ -294,7 +301,7 @@
             position: relative;
             backdrop-filter: blur(10px);
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Courier New', Consolas, monospace;
             font-size: 13px;
             opacity: 1;
             transform: translateX(0) scale(1);
@@ -318,87 +325,16 @@
             color: #86efac;
         }
         
-        .log-warning {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(217, 119, 6, 0.08));
-            border-left-color: #f59e0b;
-            color: #fde047;
-        }
-        
-        .log-error {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(220, 38, 38, 0.08));
-            border-left-color: #ef4444;
-            color: #fca5a5;
-        }
-        
         .log-status {
             background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(124, 58, 237, 0.08));
             border-left-color: #8b5cf6;
             color: #c4b5fd;
         }
         
-        /* Enhanced Scrollbar */
-        .clean-scrollbar::-webkit-scrollbar {
-            width: 12px;
-        }
-        
-        .clean-scrollbar::-webkit-scrollbar-track {
-            background: rgba(30, 41, 59, 0.4);
-            border-radius: 6px;
-            margin: 4px;
-        }
-        
-        .clean-scrollbar::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, #6366f1, #8b5cf6);
-            border-radius: 6px;
-            transition: background 0.3s ease;
-            border: 2px solid rgba(30, 41, 59, 0.4);
-        }
-        
-        .clean-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, #8b5cf6, #a855f7);
-            border: 2px solid rgba(30, 41, 59, 0.2);
-        }
-        
-        /* Static Select */
-        .clean-select {
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(71, 85, 105, 0.4);
-            border-radius: 8px;
-            padding: 8px 12px;
-            color: white;
-            font-size: 14px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }
-        
-        .clean-select:focus {
-            outline: none;
-            border-color: #6366f1;
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
-        }
-        
-        /* Static Toast - NO BLINKING */
-        .clean-toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(30, 41, 59, 0.95);
-            backdrop-filter: blur(20px);
-            color: white;
-            padding: 16px 24px;
-            border-radius: 12px;
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            box-shadow: 
-                0 10px 40px rgba(0, 0, 0, 0.3),
-                0 0 20px rgba(99, 102, 241, 0.1);
-            z-index: 1000;
-            transform: translateX(400px);
-            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            max-width: 320px;
-        }
-        
-        .clean-toast.show {
-            transform: translateX(0);
+        .log-error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(220, 38, 38, 0.08));
+            border-left-color: #ef4444;
+            color: #fca5a5;
         }
         
         /* Status Indicator */
@@ -425,46 +361,125 @@
         
         /* Countdown Timer */
         .countdown-timer {
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Courier New', Consolas, monospace;
             font-size: 1.2rem;
             font-weight: 700;
             color: #10b981;
         }
         
-        /* Utility Classes */
-        .grid { display: grid; }
-        .grid-5 { grid-template-columns: repeat(5, 1fr); gap: 1.5rem; }
-        .grid-3 { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        /* Toast */
+        .clean-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(20px);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            box-shadow: 
+                0 10px 40px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(99, 102, 241, 0.1);
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            max-width: 320px;
+        }
+        
+        .clean-toast.show {
+            transform: translateX(0);
+        }
+        
+        /* Scrollbar */
+        .clean-scrollbar::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        .clean-scrollbar::-webkit-scrollbar-track {
+            background: rgba(30, 41, 59, 0.4);
+            border-radius: 6px;
+            margin: 4px;
+        }
+        
+        .clean-scrollbar::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #6366f1, #8b5cf6);
+            border-radius: 6px;
+            transition: background 0.3s ease;
+            border: 2px solid rgba(30, 41, 59, 0.4);
+        }
+        
+        .clean-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #8b5cf6, #a855f7);
+            border: 2px solid rgba(30, 41, 59, 0.2);
+        }
+        
+        /* Layout Classes */
         .flex { display: flex; }
+        .grid { display: grid; }
         .items-center { align-items: center; }
         .justify-between { justify-content: space-between; }
         .justify-center { justify-content: center; }
-        .space-x-2 > * + * { margin-left: 0.5rem; }
-        .space-x-3 > * + * { margin-left: 0.75rem; }
+        .text-center { text-align: center; }
         .space-y-6 > * + * { margin-top: 1.5rem; }
         .space-y-4 > * + * { margin-top: 1rem; }
+        .space-y-2 > * + * { margin-top: 0.5rem; }
         .space-y-1 > * + * { margin-top: 0.25rem; }
-        .text-center { text-align: center; }
+        .space-x-3 > * + * { margin-left: 0.75rem; }
+        .space-x-2 > * + * { margin-left: 0.5rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .ml-1 { margin-left: 0.25rem; }
+        .p-6 { padding: 1.5rem; }
+        
+        /* Grid Systems */
+        .grid-5 { 
+            grid-template-columns: repeat(5, 1fr); 
+            gap: 1.5rem; 
+        }
+        .grid-3 { 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 1.5rem; 
+        }
+        
+        /* Typography */
+        .text-4xl { font-size: 2.25rem; }
+        .text-xl { font-size: 1.25rem; }
+        .text-lg { font-size: 1.125rem; }
         .text-sm { font-size: 0.875rem; }
         .text-xs { font-size: 0.75rem; }
         .font-bold { font-weight: 700; }
         .font-medium { font-weight: 500; }
+        
+        /* Colors */
         .text-white { color: white; }
         .text-slate-400 { color: #94a3b8; }
         .text-slate-300 { color: #cbd5e1; }
+        .text-slate-500 { color: #64748b; }
         .text-blue-400 { color: #60a5fa; }
         .text-green-400 { color: #4ade80; }
         .text-yellow-400 { color: #facc15; }
         .text-red-400 { color: #f87171; }
         .text-purple-400 { color: #c084fc; }
-        .mb-4 { margin-bottom: 1rem; }
-        .mt-1 { margin-top: 0.25rem; }
-        .mt-2 { margin-top: 0.5rem; }
-        .ml-1 { margin-left: 0.25rem; }
-        .p-6 { padding: 1.5rem; }
-        .py-12 { padding-top: 3rem; padding-bottom: 3rem; }
-        .container { max-width: 80rem; margin: 0 auto; padding: 1.5rem; }
         
+        /* Badge Colors */
+        .bg-blue-500\/20 { background-color: rgba(59, 130, 246, 0.2); }
+        .text-blue-300 { color: #93c5fd; }
+        .border-blue-500\/30 { border-color: rgba(59, 130, 246, 0.3); }
+        
+        .bg-purple-500\/20 { background-color: rgba(139, 92, 246, 0.2); }
+        .text-purple-300 { color: #c4b5fd; }
+        .border-purple-500\/30 { border-color: rgba(139, 92, 246, 0.3); }
+        
+        .bg-green-500\/20 { background-color: rgba(34, 197, 94, 0.2); }
+        .text-green-300 { color: #86efac; }
+        .border-green-500\/30 { border-color: rgba(34, 197, 94, 0.3); }
+        
+        .bg-red-500\/20 { background-color: rgba(239, 68, 68, 0.2); }
+        .text-red-300 { color: #fca5a5; }
+        .border-red-500\/30 { border-color: rgba(239, 68, 68, 0.3); }
+        
+        /* Mobile Responsive */
         @media (max-width: 768px) {
             .grid-5 {
                 grid-template-columns: repeat(2, 1fr);
@@ -497,20 +512,28 @@
                 font-size: 12px;
                 min-height: 60px;
             }
+            
+            .log-display-container {
+                height: 600px;
+            }
+            
+            .text-4xl {
+                font-size: 1.75rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class=\"clean-bg\">
         <div class=\"container space-y-6\">
-            <!-- Static Header -->
+            <!-- Header -->
             <div class=\"flex items-center justify-between clean-card\">
                 <div class=\"flex items-center space-x-3\">
-                    <div class=\"relative\">
-                        <svg class=\"h-10 w-10 text-yellow-400\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
+                    <div style=\"position: relative;\">
+                        <svg style=\"height: 40px; width: 40px; color: #facc15;\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
                             <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M13 10V3L4 14h7v7l9-11h-7z\"></path>
                         </svg>
-                        <div id=\"headerStatus\" class=\"absolute -top-1 -right-1 status-indicator inactive\"></div>
+                        <div id=\"headerStatus\" class=\"status-indicator inactive\" style=\"position: absolute; top: -4px; right: -4px;\"></div>
                     </div>
                     <h1 class=\"text-4xl font-bold clean-text\">
                         BossX Mining Engine
@@ -527,7 +550,7 @@
                 </div>
             </div>
 
-            <!-- Input dan Control Section -->
+            <!-- Controls Section -->
             <div class=\"grid grid-3\">
                 <!-- Node Configuration -->
                 <div class=\"clean-card\">
@@ -680,7 +703,7 @@
                     </div>
                     
                     <div id=\"logContainer\" class=\"clean-scrollbar log-display-container space-y-1\">
-                        <div id=\"emptyState\" class=\"text-slate-400 text-center py-12\">
+                        <div id=\"emptyState\" class=\"text-slate-400 text-center\" style=\"padding: 3rem 0;\">
                             <div class=\"text-lg\">Menunggu aktivasi masternode...</div>
                             <div class=\"text-sm text-slate-500 mt-2\">Masukkan konfigurasi node dan klik aktivasi untuk memulai</div>
                         </div>
@@ -818,7 +841,7 @@
                             if (logs.length === 0) {
                                 emptyState.innerHTML = '<div class=\"text-lg\">Menunggu aktivasi masternode...</div><div class=\"text-sm text-slate-500 mt-2\">Masukkan konfigurasi node dan klik aktivasi untuk memulai</div>';
                             } else {
-                                emptyState.innerHTML = '<svg width=\"48\" height=\"48\" style=\"margin: 0 auto 16px; color: #64748b;\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><polygon points=\"22,3 2,3 10,12.46 10,19 14,21 14,12.46\"></polygon></svg><div class=\"text-lg\">Tidak ada log yang sesuai dengan filter \"' + currentFilter + '\"</div>';
+                                emptyState.innerHTML = '<div class=\"text-lg\">Tidak ada log yang sesuai dengan filter \"' + currentFilter + '\"</div>';
                             }
                             emptyState.style.display = 'block';
                         }
@@ -842,7 +865,7 @@
                         logsHTML += '<div class=\"clean-log-entry ' + logClass + '\" data-log-id=\"' + log.id + '\">' +
                             '<div class=\"flex items-center justify-between\">' +
                                 '<div class=\"flex items-center space-x-3\">' +
-                                    '<span class=\"text-slate-400 text-xs font-mono\">[' + log.timestamp + ']</span>' +
+                                    '<span class=\"text-slate-400 text-xs\" style=\"font-family: Courier New, Consolas, monospace;\">[' + log.timestamp + ']</span>' +
                                     '<span class=\"px-2 py-1 rounded-md text-xs font-medium ' + badgeClass + '\">[' + log.level + ']</span>' +
                                 '</div>' +
                                 '<button onclick=\"copyLogEntry(' + log.id + ')\" class=\"clean-btn\" style=\"padding: 4px; background: rgba(71, 85, 105, 0.3); border-radius: 6px; transition: all 0.3s ease;\">' +
@@ -922,7 +945,7 @@
                     var powerStatus = document.getElementById('powerStatus');
                     var activateButton = document.getElementById('activateButton');
                     
-                    if (headerStatus) headerStatus.className = 'absolute -top-1 -right-1 status-indicator warning';
+                    if (headerStatus) headerStatus.className = 'status-indicator warning';
                     if (systemStatus) {
                         systemStatus.innerHTML = '<span class=\"status-indicator warning\"></span> Node Activated';
                         systemStatus.className = 'clean-badge badge-success';
@@ -961,7 +984,7 @@
                     var powerButton = document.getElementById('powerButton');
                     var powerStatus = document.getElementById('powerStatus');
                     
-                    if (headerStatus) headerStatus.className = 'absolute -top-1 -right-1 status-indicator';
+                    if (headerStatus) headerStatus.className = 'status-indicator';
                     if (systemStatus) {
                         systemStatus.innerHTML = '<span class=\"status-indicator\"></span> Power On Active';
                         systemStatus.className = 'clean-badge badge-success';
