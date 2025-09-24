@@ -1,1 +1,1336 @@
+<!DOCTYPE html>
+<html lang=\"id\">
+<head>
+    <meta charset=\"UTF-8\">
+    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
+    <title>Log Engine Masternode - BossX Mining Edition</title>
+    <script src=\"https://cdn.tailwindcss.com\"></script>
+    <style>
+        /* Clean Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap');
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow-x: hidden;
+        }
+        
+        /* Static Background - NO ANIMATION */
+        .clean-bg {
+            background: linear-gradient(135deg, #0f1419 0%, #1a202c 25%, #2d3748 50%, #1a202c 75%, #0f1419 100%);
+            min-height: 100vh;
+            color: white;
+            position: relative;
+        }
+        
+        .clean-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 25% 75%, rgba(99, 102, 241, 0.05) 0%, transparent 60%),
+                radial-gradient(circle at 75% 25%, rgba(139, 92, 246, 0.05) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        
+        /* Static Gradient Text - NO ANIMATION */
+        .clean-text {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: #6366f1;
+            font-weight: 800;
+        }
+        
+        /* Static Cards - NO BORDER ANIMATION */
+        .clean-card {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(71, 85, 105, 0.4);
+            border-radius: 16px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 
+                0 4px 20px rgba(0, 0, 0, 0.25),
+                0 8px 40px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+        
+        .clean-card:hover {
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 
+                0 8px 30px rgba(0, 0, 0, 0.3),
+                0 16px 60px rgba(0, 0, 0, 0.2),
+                0 0 40px rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+        
+        /* Static Stat Cards - NO ANIMATION */
+        .stat-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(71, 85, 105, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+        }
+        
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(99, 102, 241, 0.05) 0%, 
+                rgba(139, 92, 246, 0.05) 50%, 
+                rgba(6, 182, 212, 0.05) 100%
+            );
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .stat-card:hover::after {
+            opacity: 1;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 
+                0 15px 45px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(99, 102, 241, 0.2);
+            border-color: rgba(99, 102, 241, 0.5);
+        }
+        
+        /* Static Number Display - SMOOTH TRANSITION ONLY */
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-family: 'JetBrains Mono', monospace;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .stat-card:hover .stat-number {
+            transform: scale(1.08);
+        }
+        
+        /* Static Buttons - NO SHIMMER ANIMATION */
+        .clean-btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            backdrop-filter: blur(10px);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.25);
+        }
+        
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.35);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.35);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.25);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.35);
+        }
+        
+        .btn-outline {
+            background: rgba(71, 85, 105, 0.2);
+            border: 1px solid rgba(71, 85, 105, 0.4);
+            color: #cbd5e1;
+        }
+        
+        .btn-outline:hover {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: rgba(99, 102, 241, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.15);
+        }
+        
+        .btn-disabled {
+            background: rgba(75, 85, 99, 0.5);
+            color: #9ca3af;
+            cursor: not-allowed;
+        }
+        
+        .btn-disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Input Styling */
+        .clean-input {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(71, 85, 105, 0.4);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: white;
+            font-size: 14px;
+            font-family: 'JetBrains Mono', monospace;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .clean-input:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+        }
+        
+        .clean-input::placeholder {
+            color: #94a3b8;
+        }
+        
+        /* Static Badge - NO ANIMATION */
+        .clean-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .badge-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        
+        .badge-secondary {
+            background: rgba(75, 85, 99, 0.8);
+            color: #cbd5e1;
+        }
+        
+        .badge-clean {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .badge-bossx {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Log Container - Static */
+        .log-container {
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(71, 85, 105, 0.3);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Log Container Height */
+        .log-display-container {
+            height: 850px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        
+        @media (max-width: 768px) {
+            .log-display-container {
+                height: 600px;
+            }
+        }
+        
+        /* Static Log Entries - NO BLINKING ANIMATIONS */
+        .clean-log-entry {
+            padding: 16px 20px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            border-left: 3px solid;
+            position: relative;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            opacity: 1;
+            transform: translateX(0) scale(1);
+            min-height: 70px;
+        }
+        
+        .clean-log-entry:hover {
+            transform: translateX(6px) scale(1.005);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .log-info {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(37, 99, 235, 0.08));
+            border-left-color: #3b82f6;
+            color: #93c5fd;
+        }
+        
+        .log-success {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.12), rgba(21, 128, 61, 0.08));
+            border-left-color: #10b981;
+            color: #86efac;
+        }
+        
+        .log-warning {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(217, 119, 6, 0.08));
+            border-left-color: #f59e0b;
+            color: #fde047;
+        }
+        
+        .log-error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(220, 38, 38, 0.08));
+            border-left-color: #ef4444;
+            color: #fca5a5;
+        }
+        
+        .log-status {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(124, 58, 237, 0.08));
+            border-left-color: #8b5cf6;
+            color: #c4b5fd;
+        }
+        
+        /* Enhanced Scrollbar */
+        .clean-scrollbar::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        .clean-scrollbar::-webkit-scrollbar-track {
+            background: rgba(30, 41, 59, 0.4);
+            border-radius: 6px;
+            margin: 4px;
+        }
+        
+        .clean-scrollbar::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #6366f1, #8b5cf6);
+            border-radius: 6px;
+            transition: background 0.3s ease;
+            border: 2px solid rgba(30, 41, 59, 0.4);
+        }
+        
+        .clean-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #8b5cf6, #a855f7);
+            border: 2px solid rgba(30, 41, 59, 0.2);
+        }
+        
+        /* Static Select */
+        .clean-select {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(71, 85, 105, 0.4);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: white;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .clean-select:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+        }
+        
+        /* Static Toast - NO BLINKING */
+        .clean-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(20px);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            box-shadow: 
+                0 10px 40px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(99, 102, 241, 0.1);
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            max-width: 320px;
+        }
+        
+        .clean-toast.show {
+            transform: translateX(0);
+        }
+        
+        /* Status Indicator */
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        
+        .status-indicator.inactive {
+            background: #64748b;
+        }
+        
+        .status-indicator.warning {
+            background: #f59e0b;
+        }
+        
+        .status-indicator.danger {
+            background: #ef4444;
+        }
+        
+        /* Countdown Timer */
+        .countdown-timer {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #10b981;
+        }
+        
+        /* Utility Classes */
+        .grid { display: grid; }
+        .grid-5 { grid-template-columns: repeat(5, 1fr); gap: 1.5rem; }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        .flex { display: flex; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .justify-center { justify-content: center; }
+        .space-x-2 > * + * { margin-left: 0.5rem; }
+        .space-x-3 > * + * { margin-left: 0.75rem; }
+        .space-y-6 > * + * { margin-top: 1.5rem; }
+        .space-y-4 > * + * { margin-top: 1rem; }
+        .space-y-1 > * + * { margin-top: 0.25rem; }
+        .text-center { text-align: center; }
+        .text-sm { font-size: 0.875rem; }
+        .text-xs { font-size: 0.75rem; }
+        .font-bold { font-weight: 700; }
+        .font-medium { font-weight: 500; }
+        .text-white { color: white; }
+        .text-slate-400 { color: #94a3b8; }
+        .text-slate-300 { color: #cbd5e1; }
+        .text-blue-400 { color: #60a5fa; }
+        .text-green-400 { color: #4ade80; }
+        .text-yellow-400 { color: #facc15; }
+        .text-red-400 { color: #f87171; }
+        .text-purple-400 { color: #c084fc; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .ml-1 { margin-left: 0.25rem; }
+        .p-6 { padding: 1.5rem; }
+        .py-12 { padding-top: 3rem; padding-bottom: 3rem; }
+        .container { max-width: 80rem; margin: 0 auto; padding: 1.5rem; }
+        
+        @media (max-width: 768px) {
+            .grid-5 {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            
+            .grid-3 {
+                grid-template-columns: repeat(1, 1fr);
+                gap: 1rem;
+            }
+            
+            .container {
+                padding: 0.5rem;
+            }
+            
+            .clean-card {
+                padding: 1rem;
+            }
+            
+            .stat-card {
+                padding: 1rem;
+            }
+            
+            .stat-number {
+                font-size: 1.5rem;
+            }
+            
+            .clean-log-entry {
+                padding: 12px 16px;
+                font-size: 12px;
+                min-height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class=\"clean-bg\">
+        <div class=\"container space-y-6\">
+            <!-- Static Header -->
+            <div class=\"flex items-center justify-between clean-card\">
+                <div class=\"flex items-center space-x-3\">
+                    <div class=\"relative\">
+                        <svg class=\"h-10 w-10 text-yellow-400\" width=\"40\" height=\"40\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">
+                            <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M13 10V3L4 14h7v7l9-11h-7z\"></path>
+                        </svg>
+                        <div id=\"headerStatus\" class=\"absolute -top-1 -right-1 status-indicator inactive\"></div>
+                    </div>
+                    <h1 class=\"text-4xl font-bold clean-text\">
+                        BossX Mining Engine
+                    </h1>
+                    <span class=\"clean-badge badge-bossx text-xs\">
+                        MASTERNODE
+                    </span>
+                </div>
+                <div class=\"flex items-center space-x-3\">
+                    <span id=\"systemStatus\" class=\"clean-badge badge-secondary\">
+                        <span class=\"status-indicator inactive\"></span>
+                        System Ready
+                    </span>
+                </div>
+            </div>
 
+            <!-- Input dan Control Section -->
+            <div class=\"grid grid-3\">
+                <!-- Node Configuration -->
+                <div class=\"clean-card\">
+                    <h3 class=\"text-lg font-bold text-white mb-4\">
+                        <svg width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\" style=\"display: inline; margin-right: 8px;\">
+                            <circle cx=\"12\" cy=\"12\" r=\"3\"></circle>
+                            <path d=\"M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z\"></path>
+                        </svg>
+                        Node Configuration
+                    </h3>
+                    <div class=\"space-y-4\">
+                        <input 
+                            id=\"nodeInput\" 
+                            type=\"text\" 
+                            placeholder=\"contoh: 100 BossX\" 
+                            class=\"clean-input\"
+                        >
+                        <button id=\"activateButton\" class=\"clean-btn btn-primary w-full\">
+                            <svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\" style=\"display: inline; margin-right: 6px;\">
+                                <circle cx=\"12\" cy=\"12\" r=\"10\"></circle>
+                                <path d=\"M8 12l2 2 4-4\"></path>
+                            </svg>
+                            Aktivasi Masternode
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Power Control -->
+                <div class=\"clean-card\">
+                    <h3 class=\"text-lg font-bold text-white mb-4\">
+                        <svg width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\" style=\"display: inline; margin-right: 8px;\">
+                            <circle cx=\"12\" cy=\"12\" r=\"10\"></circle>
+                            <path d=\"M8 12l2 2 4-4\"></path>
+                        </svg>
+                        Power Control
+                    </h3>
+                    <div class=\"space-y-4\">
+                        <button id=\"powerButton\" class=\"clean-btn btn-disabled w-full\" disabled>
+                            <svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\" style=\"display: inline; margin-right: 6px;\">
+                                <circle cx=\"12\" cy=\"12\" r=\"10\"></circle>
+                                <path d=\"M12 6v6l4 2\"></path>
+                            </svg>
+                            Power On
+                        </button>
+                        <div id=\"powerStatus\" class=\"text-center text-sm text-slate-400\">
+                            Waiting for activation...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Auto Claim Timer -->
+                <div class=\"clean-card\">
+                    <h3 class=\"text-lg font-bold text-white mb-4\">
+                        <svg width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\" style=\"display: inline; margin-right: 8px;\">
+                            <circle cx=\"12\" cy=\"12\" r=\"10\"></circle>
+                            <polyline points=\"12,6 12,12 16,14\"></polyline>
+                        </svg>
+                        Auto Claim Timer
+                    </h3>
+                    <div class=\"text-center space-y-2\">
+                        <div id=\"claimCountdown\" class=\"countdown-timer\">--</div>
+                        <div id=\"claimStatus\" class=\"text-sm text-slate-400\">Inactive</div>
+                        <div id=\"shareCounter\" class=\"text-xs text-purple-400\">Share #0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class=\"grid grid-5\">
+                <div class=\"stat-card\">
+                    <div id=\"totalLogs\" class=\"stat-number text-white\">0</div>
+                    <div class=\"text-sm text-slate-400 mt-2\">Total Logs</div>
+                </div>
+                <div class=\"stat-card\">
+                    <div id=\"infoCount\" class=\"stat-number text-blue-400\">0</div>
+                    <div class=\"text-sm text-slate-400 mt-2\">Info</div>
+                </div>
+                <div class=\"stat-card\">
+                    <div id=\"statusCount\" class=\"stat-number text-purple-400\">0</div>
+                    <div class=\"text-sm text-slate-400 mt-2\">Status</div>
+                </div>
+                <div class=\"stat-card\">
+                    <div id=\"successCount\" class=\"stat-number text-green-400\">0</div>
+                    <div class=\"text-sm text-slate-400 mt-2\">Success</div>
+                </div>
+                <div class=\"stat-card\">
+                    <div id=\"errorCount\" class=\"stat-number text-red-400\">0</div>
+                    <div class=\"text-sm text-slate-400 mt-2\">Error</div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class=\"flex items-center justify-between clean-card\">
+                <div class=\"flex items-center space-x-3\">
+                    <div class=\"flex items-center space-x-2\">
+                        <svg width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\" class=\"text-slate-400\">
+                            <polygon points=\"22,3 2,3 10,12.46 10,19 14,21 14,12.46\"></polygon>
+                        </svg>
+                        <span class=\"text-sm text-slate-400\">Filter:</span>
+                    </div>
+                    <select id=\"filterSelect\" class=\"clean-select\">
+                        <option value=\"all\">Semua Level</option>
+                        <option value=\"info\">Info</option>
+                        <option value=\"status\">Status</option>
+                        <option value=\"success\">Success</option>
+                        <option value=\"error\">Error</option>
+                    </select>
+                </div>
+                <div class=\"flex items-center space-x-2\">
+                    <button id=\"clearButton\" class=\"clean-btn btn-outline\">
+                        <svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\" style=\"display: inline; margin-right: 6px;\">
+                            <polyline points=\"1 4 1 10 7 10\"></polyline>
+                            <path d=\"M3.51 15a9 9 0 1 0 2.13-9.36L1 10\"></path>
+                        </svg>
+                        Clear
+                    </button>
+                    <button id=\"copyButton\" class=\"clean-btn btn-outline\">
+                        <svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\" style=\"display: inline; margin-right: 6px;\">
+                            <rect x=\"9\" y=\"9\" width=\"13\" height=\"13\" rx=\"2\" ry=\"2\"></rect>
+                            <path d=\"M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1\"></path>
+                        </svg>
+                        Copy
+                    </button>
+                    <button id=\"exportButton\" class=\"clean-btn btn-outline\">
+                        <svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\" style=\"display: inline; margin-right: 6px;\">
+                            <path d=\"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3\"></path>
+                        </svg>
+                        Export
+                    </button>
+                </div>
+            </div>
+
+            <!-- Log Display Container -->
+            <div class=\"log-container\">
+                <div class=\"p-6\">
+                    <div class=\"flex items-center justify-between mb-4\">
+                        <div class=\"flex items-center space-x-3\">
+                            <svg width=\"24\" height=\"24\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\" class=\"text-green-400\">
+                                <circle cx=\"12\" cy=\"12\" r=\"10\"></circle>
+                                <polyline points=\"12,6 12,12 16,14\"></polyline>
+                            </svg>
+                            <h3 class=\"text-xl font-bold text-white\">Live Mining Log</h3>
+                            <div class=\"clean-badge badge-bossx\">
+                                BOSSX POOL
+                            </div>
+                        </div>
+                        <div id=\"logCounter\" class=\"text-sm text-slate-400 font-mono\">
+                            0 / 0 entries
+                        </div>
+                    </div>
+                    
+                    <div id=\"logContainer\" class=\"clean-scrollbar log-display-container space-y-1\">
+                        <div id=\"emptyState\" class=\"text-slate-400 text-center py-12\">
+                            <div class=\"text-lg\">Menunggu aktivasi masternode...</div>
+                            <div class=\"text-sm text-slate-500 mt-2\">Masukkan konfigurasi node dan klik aktivasi untuk memulai</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+            
+            // Global variables
+            var logs = [];
+            var currentFilter = 'all';
+            var logIdCounter = 1;
+            var nodeConfig = '';
+            var isNodeActivated = false;
+            var isPowerOn = false;
+            var isValidationRunning = false;
+            var autoClaimInterval = null;
+            var countdownInterval = null;
+            var shareNumber = 0;
+            var countdownSeconds = 60;
+
+            // System States
+            var systemStates = {
+                READY: 'ready',
+                ACTIVATED: 'activated',
+                POWERED_ON: 'powered_on',
+                VALIDATING: 'validating',
+                MINING: 'mining'
+            };
+            var currentState = systemStates.READY;
+
+            // Add log with enhanced timestamp
+            function addLog(type, level, message) {
+                try {
+                    var now = new Date();
+                    var timestamp = now.toISOString().slice(0, 19).replace('T', ' ');
+                    
+                    var newLog = {
+                        id: logIdCounter++,
+                        timestamp: timestamp,
+                        type: type,
+                        level: level.toUpperCase(),
+                        message: message
+                    };
+                    
+                    logs.unshift(newLog);
+                    
+                    // Keep only last 100 logs
+                    if (logs.length > 100) {
+                        logs = logs.slice(0, 100);
+                    }
+                    
+                    updateUI();
+                    
+                    // Auto-scroll to top for new logs
+                    var container = document.getElementById('logContainer');
+                    var filteredLogs = getFilteredLogs();
+                    
+                    if (container && filteredLogs.length > 10) {
+                        container.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error adding log:', error);
+                }
+            }
+
+            // Update UI
+            function updateUI() {
+                try {
+                    updateStatsInstantly();
+                    updateLogDisplay();
+                    updateLogCounter();
+                } catch (error) {
+                    console.error('Error updating UI:', error);
+                }
+            }
+
+            // Update stats
+            function updateStatsInstantly() {
+                try {
+                    var stats = { info: 0, status: 0, success: 0, error: 0 };
+                    
+                    for (var i = 0; i < logs.length; i++) {
+                        var logType = logs[i].type;
+                        if (stats[logType] !== undefined) {
+                            stats[logType]++;
+                        }
+                    }
+
+                    document.getElementById('totalLogs').textContent = logs.length;
+                    document.getElementById('infoCount').textContent = stats.info;
+                    document.getElementById('statusCount').textContent = stats.status;
+                    document.getElementById('successCount').textContent = stats.success;
+                    document.getElementById('errorCount').textContent = stats.error;
+                } catch (error) {
+                    console.error('Error updating stats:', error);
+                }
+            }
+
+            // Get filtered logs
+            function getFilteredLogs() {
+                try {
+                    if (currentFilter === 'all') {
+                        return logs;
+                    }
+                    return logs.filter(function(log) {
+                        return log.type === currentFilter;
+                    });
+                } catch (error) {
+                    console.error('Error filtering logs:', error);
+                    return logs;
+                }
+            }
+
+            // Update log display
+            function updateLogDisplay() {
+                try {
+                    var container = document.getElementById('logContainer');
+                    var emptyState = document.getElementById('emptyState');
+                    
+                    if (!container) return;
+                    
+                    var filteredLogs = getFilteredLogs();
+                    
+                    if (filteredLogs.length === 0) {
+                        if (emptyState) {
+                            if (logs.length === 0) {
+                                emptyState.innerHTML = '<div class=\"text-lg\">Menunggu aktivasi masternode...</div><div class=\"text-sm text-slate-500 mt-2\">Masukkan konfigurasi node dan klik aktivasi untuk memulai</div>';
+                            } else {
+                                emptyState.innerHTML = '<svg width=\"48\" height=\"48\" style=\"margin: 0 auto 16px; color: #64748b;\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><polygon points=\"22,3 2,3 10,12.46 10,19 14,21 14,12.46\"></polygon></svg><div class=\"text-lg\">Tidak ada log yang sesuai dengan filter \"' + currentFilter + '\"</div>';
+                            }
+                            emptyState.style.display = 'block';
+                        }
+                        container.innerHTML = '';
+                        if (emptyState) {
+                            container.appendChild(emptyState);
+                        }
+                        return;
+                    }
+
+                    if (emptyState) {
+                        emptyState.style.display = 'none';
+                    }
+                    
+                    var logsHTML = '';
+                    for (var i = 0; i < filteredLogs.length; i++) {
+                        var log = filteredLogs[i];
+                        var logClass = getLogClass(log.type);
+                        var badgeClass = getBadgeClass(log.type);
+                        
+                        logsHTML += '<div class=\"clean-log-entry ' + logClass + '\" data-log-id=\"' + log.id + '\">' +
+                            '<div class=\"flex items-center justify-between\">' +
+                                '<div class=\"flex items-center space-x-3\">' +
+                                    '<span class=\"text-slate-400 text-xs font-mono\">[' + log.timestamp + ']</span>' +
+                                    '<span class=\"px-2 py-1 rounded-md text-xs font-medium ' + badgeClass + '\">[' + log.level + ']</span>' +
+                                '</div>' +
+                                '<button onclick=\"copyLogEntry(' + log.id + ')\" class=\"clean-btn\" style=\"padding: 4px; background: rgba(71, 85, 105, 0.3); border-radius: 6px; transition: all 0.3s ease;\">' +
+                                    '<svg width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\">' +
+                                        '<rect x=\"9\" y=\"9\" width=\"13\" height=\"13\" rx=\"2\" ry=\"2\"></rect>' +
+                                        '<path d=\"M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1\"></path>' +
+                                    '</svg>' +
+                                '</button>' +
+                            '</div>' +
+                            '<div class=\"mt-2 ml-1\">' +
+                                '<span style=\"color: #e2e8f0; line-height: 1.6;\">' + log.message + '</span>' +
+                            '</div>' +
+                        '</div>';
+                    }
+                    
+                    container.innerHTML = logsHTML;
+                } catch (error) {
+                    console.error('Error updating log display:', error);
+                }
+            }
+
+            // Get log styling classes
+            function getLogClass(type) {
+                var styles = {
+                    info: 'log-info',
+                    status: 'log-status',
+                    success: 'log-success',
+                    error: 'log-error'
+                };
+                return styles[type] || styles.info;
+            }
+
+            // Get badge styling classes
+            function getBadgeClass(type) {
+                var styles = {
+                    info: 'bg-blue-500/20 text-blue-300 border border-blue-500/30',
+                    status: 'bg-purple-500/20 text-purple-300 border border-purple-500/30',
+                    success: 'bg-green-500/20 text-green-300 border border-green-500/30',
+                    error: 'bg-red-500/20 text-red-300 border border-red-500/30'
+                };
+                return styles[type] || styles.info;
+            }
+
+            // Update log counter
+            function updateLogCounter() {
+                try {
+                    var filteredCount = getFilteredLogs().length;
+                    var logCounter = document.getElementById('logCounter');
+                    if (logCounter) {
+                        var scrollStatus = filteredCount > 10 ? ' (Scrollable)' : ' (No Scroll)';
+                        logCounter.textContent = filteredCount + ' / ' + logs.length + ' entries' + scrollStatus;
+                    }
+                } catch (error) {
+                    console.error('Error updating log counter:', error);
+                }
+            }
+
+            // Activate masternode
+            function activateMasternode() {
+                try {
+                    var nodeInput = document.getElementById('nodeInput');
+                    var nodeValue = nodeInput.value.trim();
+                    
+                    if (!nodeValue) {
+                        showCleanToast('Input Required', 'Silakan masukkan konfigurasi node (contoh: 100 BossX)');
+                        return;
+                    }
+                    
+                    nodeConfig = nodeValue;
+                    isNodeActivated = true;
+                    currentState = systemStates.ACTIVATED;
+                    
+                    // Update UI status
+                    var headerStatus = document.getElementById('headerStatus');
+                    var systemStatus = document.getElementById('systemStatus');
+                    var powerButton = document.getElementById('powerButton');
+                    var powerStatus = document.getElementById('powerStatus');
+                    var activateButton = document.getElementById('activateButton');
+                    
+                    if (headerStatus) headerStatus.className = 'absolute -top-1 -right-1 status-indicator warning';
+                    if (systemStatus) {
+                        systemStatus.innerHTML = '<span class=\"status-indicator warning\"></span> Node Activated';
+                        systemStatus.className = 'clean-badge badge-success';
+                    }
+                    if (powerButton) {
+                        powerButton.className = 'clean-btn btn-success w-full';
+                        powerButton.disabled = false;
+                    }
+                    if (powerStatus) powerStatus.textContent = 'Ready for Power On';
+                    if (activateButton) {
+                        activateButton.className = 'clean-btn btn-disabled w-full';
+                        activateButton.disabled = true;
+                        activateButton.innerHTML = '<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\" style=\"display: inline; margin-right: 6px;\"><path d=\"M22 11.08V12a10 10 0 11-5.93-9.14\"></path><polyline points=\"22,4 12,14.01 9,11.01\"></polyline></svg>Node Activated';
+                    }
+                    
+                    // Add activation log
+                    addLog('status', 'STATUS', 'User aktivasi Node ' + nodeConfig + ' Status Aktiv');
+                    
+                    showCleanToast('Masternode Activated', 'Node ' + nodeConfig + ' berhasil diaktivasi. Klik Power On untuk melanjutkan.');
+                } catch (error) {
+                    console.error('Error activating masternode:', error);
+                }
+            }
+
+            // Power On system
+            function powerOn() {
+                try {
+                    if (!isNodeActivated) return;
+                    
+                    isPowerOn = true;
+                    currentState = systemStates.POWERED_ON;
+                    
+                    // Update UI status
+                    var headerStatus = document.getElementById('headerStatus');
+                    var systemStatus = document.getElementById('systemStatus');
+                    var powerButton = document.getElementById('powerButton');
+                    var powerStatus = document.getElementById('powerStatus');
+                    
+                    if (headerStatus) headerStatus.className = 'absolute -top-1 -right-1 status-indicator';
+                    if (systemStatus) {
+                        systemStatus.innerHTML = '<span class=\"status-indicator\"></span> Power On Active';
+                        systemStatus.className = 'clean-badge badge-success';
+                    }
+                    if (powerButton) {
+                        powerButton.className = 'clean-btn btn-disabled w-full';
+                        powerButton.disabled = true;
+                        powerButton.innerHTML = '<svg width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\" style=\"display: inline; margin-right: 6px;\"><path d=\"M22 11.08V12a10 10 0 11-5.93-9.14\"></path><polyline points=\"22,4 12,14.01 9,11.01\"></polyline></svg>Power On Active';
+                    }
+                    if (powerStatus) powerStatus.textContent = 'System running...';
+                    
+                    // Add power on logs
+                    addLog('info', 'INFO', 'Power On aktiv');
+                    setTimeout(function() {
+                        addLog('status', 'STATUS', 'Connected successfully to masternode Validasi Running');
+                        startValidationProcess();
+                    }, 1000);
+                    
+                    showCleanToast('Power On Activated', 'Sistem berhasil dihidupkan. Memulai proses validasi...');
+                } catch (error) {
+                    console.error('Error powering on:', error);
+                }
+            }
+
+            // Start validation process
+            function startValidationProcess() {
+                try {
+                    isValidationRunning = true;
+                    currentState = systemStates.VALIDATING;
+                    
+                    setTimeout(function() {
+                        addLog('status', 'STATUS', 'Connected successfully to masternode Validasi Running');
+                    }, 2000);
+                    
+                    setTimeout(function() {
+                        addLog('info', 'INFO', 'Connecting to master pool BossXPool.com:4444...');
+                    }, 4000);
+                    
+                    setTimeout(function() {
+                        addLog('status', 'STATUS', 'Network sync: 100%');
+                    }, 6000);
+                    
+                    setTimeout(function() {
+                        addLog('info', 'INFO', 'GPU#0: 48.3 MH/s | Temp: 68°C | Fan: 82%');
+                        startMiningProcess();
+                    }, 8000);
+                } catch (error) {
+                    console.error('Error starting validation process:', error);
+                }
+            }
+
+            // Start mining process with auto claim
+            function startMiningProcess() {
+                try {
+                    currentState = systemStates.MINING;
+                    
+                    var claimStatus = document.getElementById('claimStatus');
+                    if (claimStatus) claimStatus.textContent = 'Auto claim active';
+                    
+                    startAutoClaim();
+                    showCleanToast('Mining Started', 'Proses mining dimulai. Auto claim setiap 60 detik.');
+                } catch (error) {
+                    console.error('Error starting mining process:', error);
+                }
+            }
+
+            // Start auto claim system
+            function startAutoClaim() {
+                try {
+                    countdownSeconds = 60;
+                    shareNumber = 0;
+                    
+                    // Start countdown
+                    countdownInterval = setInterval(function() {
+                        updateCountdown();
+                    }, 1000);
+                    
+                    // Start auto claim
+                    autoClaimInterval = setInterval(function() {
+                        executeAutoClaim();
+                    }, 60000);
+                    
+                    updateCountdown();
+                } catch (error) {
+                    console.error('Error starting auto claim:', error);
+                }
+            }
+
+            // Update countdown timer
+            function updateCountdown() {
+                try {
+                    var claimCountdown = document.getElementById('claimCountdown');
+                    if (claimCountdown) {
+                        if (countdownSeconds <= 0) {
+                            countdownSeconds = 60;
+                            executeAutoClaim();
+                        }
+                        
+                        var minutes = Math.floor(countdownSeconds / 60);
+                        var seconds = countdownSeconds % 60;
+                        var timeString = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+                        claimCountdown.textContent = timeString;
+                        
+                        countdownSeconds--;
+                    }
+                } catch (error) {
+                    console.error('Error updating countdown:', error);
+                }
+            }
+
+            // Execute auto claim
+            function executeAutoClaim() {
+                try {
+                    shareNumber++;
+                    var shareCounter = document.getElementById('shareCounter');
+                    if (shareCounter) {
+                        shareCounter.textContent = 'Share #' + shareNumber.toString().padStart(2, '0');
+                    }
+                    
+                    var reward = '0.000003858';
+                    var diffValue = '12000';
+                    
+                    addLog('success', 'SUCCESS', 'Auto claim Accepted Share #' + shareNumber.toString().padStart(2, '0') + ' (Diff: ' + diffValue + ') - Reward: ' + reward + ' BossX');
+                } catch (error) {
+                    console.error('Error executing auto claim:', error);
+                }
+            }
+
+            // Copy single log entry (global function for onclick)
+            window.copyLogEntry = function(logId) {
+                try {
+                    var log = null;
+                    for (var i = 0; i < logs.length; i++) {
+                        if (logs[i].id == logId) {
+                            log = logs[i];
+                            break;
+                        }
+                    }
+                    
+                    if (log) {
+                        var logText = '[' + log.timestamp + '] [' + log.level + '] ' + log.message;
+                        
+                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                            navigator.clipboard.writeText(logText).then(function() {
+                                showCleanToast('Log Entry Disalin', 'Log entry berhasil disalin ke clipboard');
+                            }).catch(function() {
+                                fallbackCopyTextToClipboard(logText);
+                            });
+                        } else {
+                            fallbackCopyTextToClipboard(logText);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error copying log entry:', error);
+                }
+            };
+
+            // Fallback copy method
+            function fallbackCopyTextToClipboard(text) {
+                try {
+                    var textArea = document.createElement(\"textarea\");
+                    textArea.value = text;
+                    textArea.style.position = \"fixed\";
+                    textArea.style.left = \"-999999px\";
+                    textArea.style.top = \"-999999px\";
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    
+                    try {
+                        var successful = document.execCommand('copy');
+                        if (successful) {
+                            showCleanToast('Log Entry Disalin', 'Log entry berhasil disalin ke clipboard');
+                        }
+                    } catch (err) {
+                        showCleanToast('Error', 'Gagal menyalin log entry');
+                    }
+                    
+                    document.body.removeChild(textArea);
+                } catch (error) {
+                    console.error('Error in fallback copy:', error);
+                }
+            }
+
+            // Copy all logs
+            function copyAllLogs() {
+                try {
+                    var filteredLogs = getFilteredLogs();
+                    var logTexts = [];
+                    
+                    for (var i = 0; i < filteredLogs.length; i++) {
+                        var log = filteredLogs[i];
+                        logTexts.push('[' + log.timestamp + '] [' + log.level + '] ' + log.message);
+                    }
+                    
+                    var logText = logTexts.join('
+');
+                    
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(logText).then(function() {
+                            showCleanToast('Log Berhasil Disalin', filteredLogs.length + ' log entries telah disalin ke clipboard');
+                        }).catch(function() {
+                            fallbackCopyTextToClipboard(logText);
+                        });
+                    } else {
+                        fallbackCopyTextToClipboard(logText);
+                    }
+                } catch (error) {
+                    console.error('Error copying all logs:', error);
+                }
+            }
+
+            // Export logs
+            function exportLogs() {
+                try {
+                    var filteredLogs = getFilteredLogs();
+                    var logTexts = [];
+                    
+                    for (var i = 0; i < filteredLogs.length; i++) {
+                        var log = filteredLogs[i];
+                        logTexts.push('[' + log.timestamp + '] [' + log.level + '] ' + log.message);
+                    }
+                    
+                    var logText = logTexts.join('
+');
+                    
+                    try {
+                        var blob = new Blob([logText], { type: 'text/plain' });
+                        var url = URL.createObjectURL(blob);
+                        var a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'bossx_mining_logs_' + new Date().toISOString().split('T')[0] + '.txt';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                        
+                        showCleanToast('Log Berhasil Diekspor', filteredLogs.length + ' log entries telah diekspor ke file');
+                    } catch (blobError) {
+                        var dataStr = \"data:text/plain;charset=utf-8,\" + encodeURIComponent(logText);
+                        var downloadAnchorNode = document.createElement('a');
+                        downloadAnchorNode.setAttribute(\"href\", dataStr);
+                        downloadAnchorNode.setAttribute(\"download\", 'bossx_mining_logs_' + new Date().toISOString().split('T')[0] + '.txt');
+                        document.body.appendChild(downloadAnchorNode);
+                        downloadAnchorNode.click();
+                        document.body.removeChild(downloadAnchorNode);
+                        
+                        showCleanToast('Log Berhasil Diekspor', filteredLogs.length + ' log entries telah diekspor ke file');
+                    }
+                } catch (error) {
+                    console.error('Error exporting logs:', error);
+                    showCleanToast('Error', 'Gagal mengekspor log');
+                }
+            }
+
+            // Clear logs
+            function clearLogs() {
+                try {
+                    logs = [];
+                    updateUI();
+                    showCleanToast('Log Dibersihkan', 'Semua log telah dihapus dari tampilan');
+                } catch (error) {
+                    console.error('Error clearing logs:', error);
+                }
+            }
+
+            // Static toast notification
+            function showCleanToast(title, message) {
+                try {
+                    var toast = document.createElement('div');
+                    toast.className = 'clean-toast';
+                    toast.innerHTML = '<div style=\"font-weight: 600; font-size: 16px;\">' + title + '</div><div style=\"font-size: 14px; color: #cbd5e1; margin-top: 4px; line-height: 1.4;\">' + message + '</div>';
+                    
+                    document.body.appendChild(toast);
+                    
+                    setTimeout(function() { 
+                        toast.classList.add('show'); 
+                    }, 100);
+                    
+                    setTimeout(function() {
+                        toast.classList.remove('show');
+                        setTimeout(function() { 
+                            if (document.body.contains(toast)) {
+                                document.body.removeChild(toast);
+                            }
+                        }, 400);
+                    }, 4000);
+                } catch (error) {
+                    console.error('Error showing toast:', error);
+                }
+            }
+
+            // Handle filter change
+            function handleFilterChange(e) {
+                try {
+                    currentFilter = e.target.value;
+                    updateUI();
+                } catch (error) {
+                    console.error('Error handling filter change:', error);
+                }
+            }
+
+            // Initialize enhanced app
+            function init() {
+                try {
+                    var activateButton = document.getElementById('activateButton');
+                    var powerButton = document.getElementById('powerButton');
+                    var copyButton = document.getElementById('copyButton');
+                    var exportButton = document.getElementById('exportButton');
+                    var clearButton = document.getElementById('clearButton');
+                    var filterSelect = document.getElementById('filterSelect');
+                    var nodeInput = document.getElementById('nodeInput');
+                    
+                    // Event listeners
+                    if (activateButton) {
+                        activateButton.addEventListener('click', activateMasternode);
+                    }
+                    if (powerButton) {
+                        powerButton.addEventListener('click', powerOn);
+                    }
+                    if (copyButton) {
+                        copyButton.addEventListener('click', copyAllLogs);
+                    }
+                    if (exportButton) {
+                        exportButton.addEventListener('click', exportLogs);
+                    }
+                    if (clearButton) {
+                        clearButton.addEventListener('click', clearLogs);
+                    }
+                    if (filterSelect) {
+                        filterSelect.addEventListener('change', handleFilterChange);
+                    }
+                    if (nodeInput) {
+                        nodeInput.addEventListener('keypress', function(e) {
+                            if (e.key === 'Enter') {
+                                activateMasternode();
+                            }
+                        });
+                    }
+                    
+                    // Initialize UI
+                    updateUI();
+                    
+                    // Welcome message
+                    setTimeout(function() {
+                        showCleanToast('BossX Mining Engine Ready', 'Masukkan konfigurasi node dan mulai mining!');
+                    }, 1000);
+                    
+                    console.log('BossX Mining Engine initialized successfully');
+                } catch (error) {
+                    console.error('Error initializing BossX mining app:', error);
+                }
+            }
+
+            // Start enhanced app when DOM is loaded
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+            
+            // Fallback initialization
+            setTimeout(function() {
+                if (typeof init === 'function') {
+                    init();
+                }
+            }, 1000);
+            
+        })();
+    </script>
+</body>
+</html>
